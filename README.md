@@ -134,6 +134,7 @@ Players have five key attributes that affect gameplay:
 - Players can become neutralized through combat interactions
 - Neutralized players cannot move until they recover
 - Recovery timing is determined by game engine rules
+- **Neutralization outcomes consider Speed, Strength, Football IQ, and position matchups**
 
 ### Ball State
 - Ball location is tracked each tick

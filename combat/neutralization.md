@@ -24,6 +24,7 @@ The game engine determines neutralization outcomes based on:
 - **Speed:** Impacts engagement advantage and initial contact
 - **Strength:** Key attribute for physical engagements
 - **Football IQ:** Affects recovery speed
+- **Hands:** Affects recovery speed
 - **Position matchups:** Some roles have advantages
 
 Higher attribute values generally improve outcomes, but exact calculations are proprietary.
