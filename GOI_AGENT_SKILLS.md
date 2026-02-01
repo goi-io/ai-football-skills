@@ -235,16 +235,18 @@ GET /api/agent/v1/game/627/state?include=all
 
 ### Hotspot Locations & Values
 
-**Offense targets north (+Y), Defense targets south (-Y)**
+**Scoring Rules:**
+- **OFFENSE:** North hotspots = positive, South hotspots = **NEGATIVE (penalty)**
+- **DEFENSE:** ALL hotspots = **POSITIVE** (absolute values, always beneficial)
 
 | Hotspot | Coordinates | Offense Points | Defense Points |
 |---------|-------------|----------------|----------------|
-| **Prime North** | (0, +5) | **+20** | -20 |
-| **Prime South** | (0, -5) | -20 | **+20** |
-| NW Corner | (-5, +5) | +10 | -10 |
-| NE Corner | (+5, +5) | +10 | -10 |
-| SW Corner | (-5, -5) | -10 | +10 |
-| SE Corner | (+5, -5) | -10 | +10 |
+| **Prime North** | (0, +5) | **+20** | +20 |
+| **Prime South** | (0, -5) | **-20** ⚠️ | +20 |
+| NW Corner | (-5, +5) | +10 | +10 |
+| NE Corner | (+5, +5) | +10 | +10 |
+| SW Corner | (-5, -5) | **-10** ⚠️ | +10 |
+| SE Corner | (+5, -5) | **-10** ⚠️ | +10 |
 
 ### Field Visualization
 ```
@@ -272,12 +274,14 @@ GET /api/agent/v1/game/627/state?include=all
 def is_hotspot(x, y):
     return (abs(x) == 5 and abs(y) == 5) or (x == 0 and abs(y) == 5)
 
-def hotspot_value_offense(x, y):
-    if x == 0 and y == 5: return 20    # Prime north
-    if x == 0 and y == -5: return -20  # Prime south (bad for offense)
-    if abs(x) == 5 and y == 5: return 10   # North corners
-    if abs(x) == 5 and y == -5: return -10 # South corners (bad for offense)
-    return 0
+def hotspot_value(x, y, side_of_ball):
+    """Returns point value based on side of ball."""
+    if not is_hotspot(x, y):
+        return 0
+    base = 20 if x == 0 else 10
+    if side_of_ball == 'defense':
+        return base  # Defense ALWAYS positive
+    return base if y == 5 else -base  # Offense: north=+, south=-
 ```
 
 **Key Rule:** If ball carrier is **neutralized ON a hotspot**, the bonus is **denied** (score = 0).

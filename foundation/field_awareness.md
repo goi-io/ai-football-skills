@@ -48,25 +48,29 @@ Understand the GOI playing field geometry, territories, hotspot locations, and s
 
 Hotspots are special scoring zones that award bonus points when the ball carrier reaches them.
 
-### Corner Hotspots (±10 points)
+### Scoring Rules
+- **Defense:** All hotspot values are **absolute (positive)**. Defense always benefits from reaching any hotspot.
+- **Offense:** North hotspots are positive, but **south hotspots are NEGATIVE** (penalties).
+
+### Corner Hotspots (10 points)
 | Location | Coordinates | Offense Value | Defense Value |
 |----------|-------------|---------------|---------------|
-| Northwest | (-5, +5) | +10 | -10 |
-| Northeast | (+5, +5) | +10 | -10 |
-| Southwest | (-5, -5) | -10 | +10 |
-| Southeast | (+5, -5) | -10 | +10 |
+| Northwest | (-5, +5) | **+10** | +10 |
+| Northeast | (+5, +5) | **+10** | +10 |
+| Southwest | (-5, -5) | **-10** ⚠️ | +10 |
+| Southeast | (+5, -5) | **-10** ⚠️ | +10 |
 
-### Prime Hotspots (±20 points)
+### Prime Hotspots (20 points)
 | Location | Coordinates | Offense Value | Defense Value |
 |----------|-------------|---------------|---------------|
-| North Center | (0, +5) | +20 | -20 |
-| South Center | (0, -5) | -20 | +20 |
+| North Center | (0, +5) | **+20** | +20 |
+| South Center | (0, -5) | **-20** ⚠️ | +20 |
 
-### Hotspot Map
+### Hotspot Map (Offense Perspective)
 ```
        -5    -4    -3    -2    -1     0    +1    +2    +3    +4    +5
       ┌─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┐
-  +5  │ +10 │     │     │     │     │ +20 │     │     │     │     │ +10 │  ← Offense Scoring Zone
+  +5  │ +10 │     │     │     │     │ +20 │     │     │     │     │ +10 │  ← OFFENSE TARGETS (+)
       ├─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤
   +4  │     │     │     │     │     │     │     │     │     │     │     │
       ├─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤
@@ -76,7 +80,7 @@ Hotspots are special scoring zones that award bonus points when the ball carrier
       ├─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤
   +1  │     │     │     │     │     │     │     │     │     │     │     │
       ├─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤
-   0  │     │     │     │     │     │  ●  │     │     │     │     │     │  ← Line of Scrimmage
+   0  │     │     │     │     │     │  ●  │     │     │     │     │     │  ← LINE OF SCRIMMAGE
       ├─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤
   -1  │     │     │     │     │     │     │     │     │     │     │     │
       ├─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤
@@ -86,9 +90,25 @@ Hotspots are special scoring zones that award bonus points when the ball carrier
       ├─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤
   -4  │     │     │     │     │     │     │     │     │     │     │     │
       ├─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤
-  -5  │ -10 │     │     │     │     │ -20 │     │     │     │     │ -10 │  ← Defense Scoring Zone
+  -5  │ -10 │     │     │     │     │ -20 │     │     │     │     │ -10 │  ← OFFENSE DANGER (−)
       └─────┴─────┴─────┴─────┴─────┴─────┴─────┴─────┴─────┴─────┴─────┘
-            (Values shown from Offense perspective)
+```
+
+### Hotspot Map (Defense Perspective)
+```
+       -5    -4    -3    -2    -1     0    +1    +2    +3    +4    +5
+      ┌─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┐
+  +5  │ +10 │     │     │     │     │ +20 │     │     │     │     │ +10 │  ← DEFENSE BONUS (+)
+      ├─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤
+   :  │                         ...                                     │
+      ├─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤
+   0  │     │     │     │     │     │  ●  │     │     │     │     │     │  ← LINE OF SCRIMMAGE
+      ├─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤
+   :  │                         ...                                     │
+      ├─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤
+  -5  │ +10 │     │     │     │     │ +20 │     │     │     │     │ +10 │  ← DEFENSE BONUS (+)
+      └─────┴─────┴─────┴─────┴─────┴─────┴─────┴─────┴─────┴─────┴─────┘
+        Defense ALWAYS scores positive (absolute values) at ALL hotspots
 ```
 
 ### Hotspot Rules
@@ -101,14 +121,17 @@ Hotspots are special scoring zones that award bonus points when the ball carrier
 
 ### Offensive Strategy
 - **Primary targets:** North hotspots (+10, +20, +10 at Y=+5)
-- **Avoid:** South hotspots (negative points for offense)
-- **Best path:** Advance Y while avoiding tackles
+- **⚠️ AVOID:** South hotspots = **NEGATIVE POINTS** for offense!
+- **Best path:** Advance Y (north) while avoiding tackles
 - **Prime target:** (0, +5) for maximum +20 points
+- **Worst case:** Ball carrier at (0, -5) = **-20 points**
 
 ### Defensive Strategy
-- **Protect:** North hotspots to deny offense bonus points
-- **Force turnovers:** Near south hotspots for +10/+20 points
-- **Coverage priority:** Prime hotspot (0, +5) highest priority
+- **ALL hotspots are positive** for defense (absolute values)
+- **Any interception** that reaches a hotspot scores points
+- **North hotspots:** Worth pursuing if opportunity arises (+10/+20)
+- **South hotspots:** Force offense ball carrier here for turnover + points
+- **Coverage priority:** Prevent offense from reaching north hotspots
 
 ### Distance Calculations
 ```
@@ -139,13 +162,23 @@ def is_hotspot(x, y):
     return (abs(x) == 5 and abs(y) == 5) or (x == 0 and abs(y) == 5)
 
 def hotspot_value(x, y, side_of_ball):
-    """Returns point value for offense. Negate for defense."""
+    """
+    Returns point value based on side of ball.
+    - OFFENSE: North = positive, South = NEGATIVE
+    - DEFENSE: ALL hotspots = POSITIVE (absolute values)
+    """
     if not is_hotspot(x, y):
         return 0
-    if x == 0:  # Prime hotspot
-        return 20 if y == 5 else -20
-    else:  # Corner hotspot
-        return 10 if y == 5 else -10
+    
+    # Base value (absolute)
+    base = 20 if x == 0 else 10
+    
+    if side_of_ball == 'defense':
+        # Defense ALWAYS scores positive at any hotspot
+        return base
+    else:
+        # Offense: north = positive, south = NEGATIVE
+        return base if y == 5 else -base
 ```
 
 ### Nearest Hotspot Calculation
@@ -159,7 +192,9 @@ def nearest_scoring_hotspot(x, y):
 ## Key Takeaways
 
 1. **Field is 11×11** with coordinates from -5 to +5 on both axes
-2. **6 hotspots total:** 4 corners (±10 pts) + 2 prime (±20 pts)
-3. **Offense scores north** (Y=+5), **Defense scores south** (Y=-5)
-4. **Prime hotspot (0, +5)** is the highest-value target
-5. **Neutralization on hotspot = 0 points** (critical rule)
+2. **6 hotspots total:** 4 corners (10 pts) + 2 prime center (20 pts)
+3. **OFFENSE:** North hotspots = +points, South hotspots = **−points (PENALTY)**
+4. **DEFENSE:** ALL hotspots = **+points (absolute values, always positive)**
+5. **Prime hotspot (0, +5)** is highest-value for offense (+20)
+6. **Prime hotspot (0, -5)** is worst for offense (−20) but great for defense (+20)
+7. **Neutralization on hotspot = 0 points** (critical rule)
