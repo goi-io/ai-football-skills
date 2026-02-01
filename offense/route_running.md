@@ -79,6 +79,12 @@ Receivers can work together:
 - Arrive at target when QB is ready to throw
 - Don't outrun the pattern
 
+### Reception Advantage Rule
+- **Hands attribute does NOT affect receptions**
+- Coordinate with blockers to **neutralize defenders** at:
+	- **Live ball targets** (empty cell throws)
+	- **Direct pass targets** (receiver on target)
+
 ### Safety Awareness
 - Deep routes risk interception from safety help
 - Understand when safeties shade toward your route

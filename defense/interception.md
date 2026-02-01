@@ -28,7 +28,8 @@ Interceptions are highly valuable:
 When QB throws to an empty target cell:
 - Ball becomes contestable
 - Defender reaching target first can intercept
-- Hands attribute influences success
+- **Hands attribute does NOT affect interception success**
+- Interception chance increases when **receivers are neutralized** at the live ball
 
 ### Anticipated Throws
 - Read QB's eyes/body language
@@ -59,10 +60,10 @@ When QB throws to an empty target cell:
 
 ## Key Factors
 
-### Hands Attribute
-- Higher Hands = better catch success
-- Influences contested catch outcomes
-- S and CBs typically have higher Hands
+### Neutralization Advantage (Critical)
+- Neutralizing a receiver **at a live ball** increases interception chance
+- Neutralizing a receiver **at a direct pass target** increases interception chance
+- Blocking the **QB directional throwing lane** increases interception chance
 
 ### Position Advantage
 - Being closer to target helps

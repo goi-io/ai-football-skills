@@ -51,6 +51,13 @@ Lower risk when:
 - Direct pass to receiver already at target
 - Throwing lanes are clear
 
+### Reception Advantage Rule (Critical)
+- **Hands attribute does NOT affect receptions**
+- Reception chance increases **only** when defenders are **neutralized** at:
+	- **Live balls** (empty target cell), or
+	- **Direct pass targets** (receiver on target)
+- Use blockers to neutralize defenders in or near the target lane just before arrival
+
 ### Throwing Lane Awareness
 - Defenders positioned between QB and target can disrupt passes
 - Consider alternate targets if primary lane is blocked

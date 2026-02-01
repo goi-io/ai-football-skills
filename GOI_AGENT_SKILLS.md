@@ -336,7 +336,7 @@ def hotspot_value(x, y, side_of_ball):
 - **Speed:** Movement priority/efficiency
 - **Strength:** Physical engagement power
 - **Football IQ:** Decision quality, recovery
-- **Hands:** Catch/interception ability
+- **Hands:** *Currently no impact on receptions/interceptions*
 - **Accuracy:** QB only - pass precision
 
 Attribute values influence game outcomes. Higher values generally improve performance in related actions.
@@ -436,6 +436,7 @@ Attribute values influence game outcomes. Higher values generally improve perfor
 - Evaluate receiver positions relative to QB's pattern
 - Assess defender positions for interception risk
 - Time throws to meet receiver arrivals
+- **Reception advantage rule:** Neutralizing defenders **at live balls** or **direct pass targets** increases reception chance
 
 ---
 
@@ -511,7 +512,11 @@ Attribute values influence game outcomes. Higher values generally improve perfor
 **Key Factors:**
 - Anticipate pass targets from QB pattern
 - Determine if defender can reach ball location
-- Hands attribute influences catch success
+- **Hands attribute does NOT affect interception success**
+- **Interception chance increases only when receivers are neutralized** at:
+  - **Live balls** (empty target cell)
+  - **Direct pass targets** (receiver on target)
+  - **QB directional throwing lanes** (lane blocking)
 
 **Applicable Positions:** S, CB1, CB2 (primary); LB (secondary)
 
