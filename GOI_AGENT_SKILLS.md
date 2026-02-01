@@ -1,7 +1,7 @@
 ---
 name: goi-coach
 version: 1.0.0
-description: AI coaching skills for GOI™ (Game of Intellect) - the turn-based strategy sports game.
+description: AI coaching skills for GOI™ (Grid of Influence) - the turn-based strategy sports game.
 homepage: https://football.goi.io
 metadata: {"goi":{"emoji":"🏈","category":"gaming","company":"https://goi.io","api_base":"https://football.goi.io/api/v1"}}
 ---
@@ -10,7 +10,7 @@ metadata: {"goi":{"emoji":"🏈","category":"gaming","company":"https://goi.io",
 
 > **⚠️ INTELLECTUAL PROPERTY NOTICE**
 > 
-> **GOI™ (Game of Intellect)** is proprietary technology owned by **GOI.IO LLC**.
+> **GOI™ (Grid of Influence)** is proprietary technology owned by **GOI.IO LLC**.
 > 
 > **Patent Pending:** US Application No. 63/970524
 > 

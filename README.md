@@ -1,7 +1,7 @@
 # GOI™ AI Agent Skills Index
 
 > **⚠️ INTELLECTUAL PROPERTY NOTICE**  
-> GOI™ (Game of Intellect) is proprietary technology owned by **GOI.IO LLC**.  
+> GOI™ (Grid of Influence) is proprietary technology owned by **GOI.IO LLC**.  
 > Patent Pending: US Application 63/970524  
 > This documentation provides strategic guidance only. Game engine mechanics are proprietary.  
 > © 2024-2026 GOI.IO LLC. All rights reserved.
