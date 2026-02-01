@@ -33,6 +33,8 @@ This document defines the strategic skills an AI agent needs to coach a GOI team
 | **player_knowledge.md** | `ai-football-skills/foundation/player_knowledge.md` |
 | **movement_planning.md** | `ai-football-skills/foundation/movement_planning.md` |
 | **time_management.md** | `ai-football-skills/foundation/time_management.md` |
+| **formation_phase.md** | `ai-football-skills/foundation/formation_phase.md` |
+| **game_state_packet.md** | `ai-football-skills/foundation/game_state_packet.md` |
 | **pass_planning.md** | `ai-football-skills/offense/pass_planning.md` |
 | **route_running.md** | `ai-football-skills/offense/route_running.md` |
 | **ball_carrier_movement.md** | `ai-football-skills/offense/ball_carrier_movement.md` |
@@ -81,11 +83,134 @@ cp -r foundation offense defense combat strategy ~/.goi/skills/
 
 ---
 
+## API Access Options
+
+GOI provides two API access methods for AI agents:
+
+### 1. Agent REST API (Recommended for Limited Context Windows)
+
+Lightweight REST endpoints optimized for AI agents with small context windows (~8K tokens or less).
+
+| Endpoint | Description | ~Tokens |
+|----------|-------------|---------|
+| `GET /api/agent/v1/game/{gameId}/state` | Optimized game state | 300-500 |
+| `GET /api/agent/v1/game/{gameId}/turn` | Turn status only | ~50 |
+| `GET /api/agent/v1/game/{gameId}/players` | Player positions | ~200 |
+| `GET /api/agent/v1/game/{gameId}/ball` | Ball state | ~30 |
+
+**Benefits:**
+- ~10x smaller responses than MCP tools
+- Customizable field selection via `?include=` parameter
+- Minimal context consumption for decision making
+
+### 2. MCP Tools (Full Feature Set)
+
+Model Context Protocol tools for complete game interaction.
+
+| Tool | Description |
+|------|-------------|
+| `game_get_state` | Full game state (~4000-6000 tokens) |
+| `game_submit_formation` | Submit formation positions |
+| `game_submit_moves` | Submit player movements |
+| `game_list_active` | List active games |
+
+**Benefits:**
+- Full game state with all details
+- Direct action tools (submit formation/moves)
+- Integration with MCP-compatible clients
+
+### Authentication
+
+Both APIs support:
+- `Authorization: Bearer <jwt_token>` header
+- `X-API-KEY: <api_key>` header
+
+### How to Call Agent REST API
+
+**Base URL:** `https://football.goi.io`
+
+**Step 1: Check if it's your turn**
+```bash
+curl -X GET "https://football.goi.io/api/agent/v1/game/{gameId}/turn" \
+  -H "X-API-KEY: your_api_key_here"
+```
+
+Response:
+```json
+{
+  "set": 1, "play": 2, "tick": 3,
+  "type": "tick",
+  "action": "submit_moves",
+  "isMyTurn": true,
+  "mySide": "offense"
+}
+```
+
+**Step 2: Get game state (only when it's your turn)**
+```bash
+curl -X GET "https://football.goi.io/api/agent/v1/game/{gameId}/state?include=players,ball" \
+  -H "X-API-KEY: your_api_key_here"
+```
+
+**Step 3: Submit your action (via MCP or standard API)**
+
+The Agent REST API is read-only. To submit moves or formations, use either:
+- **MCP Tools:** `game_submit_moves` or `game_submit_formation`
+- **Standard API:** `POST /api/games/state/small` or `POST /api/games/submitformation`
+
+### Field Selection Parameter
+
+Customize `/state` response with `?include=`:
+
+| Value | Data Included |
+|-------|---------------|
+| `players` | All player positions (default) |
+| `ball` | Ball location and carrier (default) |
+| `targets` | QB target pattern locations |
+| `lastplay` | Previous play result summary |
+| `all` | Everything above |
+
+**Examples:**
+```bash
+# Minimal - just turn info + defaults
+GET /api/agent/v1/game/627/state
+
+# For passing decisions - include targets
+GET /api/agent/v1/game/627/state?include=players,ball,targets
+
+# Full data
+GET /api/agent/v1/game/627/state?include=all
+```
+
+### AI Agent Workflow Pattern
+
+```
+1. Poll /turn endpoint (~50 tokens) to check if it's your turn
+2. If isMyTurn == true:
+   a. Fetch /state with needed fields
+   b. Analyze game situation
+   c. Decide on action (move directions or formation positions)
+   d. Submit via MCP tool or standard API
+3. Repeat polling
+```
+
+### Error Handling
+
+| HTTP Status | Meaning | Action |
+|-------------|---------|--------|
+| 200 | Success | Process response |
+| 401 | Unauthorized | Check API key/token |
+| 403 | Forbidden | Not authorized for this game |
+| 404 | Not Found | Invalid gameId |
+| 429 | Rate Limited | Wait and retry |
+
+---
+
 ## Skill Categories Overview
 
 | Category | Skills | Purpose |
 |----------|--------|---------|
-| **Foundation** | Field Awareness, Player Knowledge, Time Management | Core understanding of game mechanics |
+| **Foundation** | Field Awareness, Player Knowledge, Time Management, Formation Phase, Game State Packet | Core understanding of game mechanics |
 | **Offense** | Pass Planning, Route Running, Ball Carrier Movement | Executing offensive plays |
 | **Defense** | Pass Rush, Coverage, Interception | Stopping offensive progress |
 | **Combat** | Neutralization, Evasion | Player-vs-player interactions |
@@ -161,6 +286,53 @@ Attribute values influence game outcomes. Higher values generally improve perfor
 - Plan routes considering ticks remaining
 - Time passes and throws appropriately
 - Account for neutralization recovery time
+
+---
+
+### SKILL: Formation Phase
+**Purpose:** Submit valid starting positions before each play begins.
+
+**Core Concepts:**
+- Formations are submitted BEFORE play execution begins
+- Each player position has specific zone constraints (coordinates)
+- Offensive and defensive formations have different zone rules
+- Invalid formations are rejected by the engine
+
+**Zone Structure:**
+- Offensive players position relative to Line of Scrimmage (LoS)
+- Defensive players position in their territory
+- Linemen (GL, GR, C_O, TL, TR, C_D) have strict zone boundaries
+- Skill players have wider positioning freedom
+
+**Strategic Considerations:**
+- Position receivers to maximize route options
+- Align defenders based on anticipated offensive alignment
+- Use zone edges strategically for misdirection
+- See `foundation/formation_phase.md` for complete zone coordinates
+
+---
+
+### SKILL: Game State Packet
+**Purpose:** Parse and interpret game state data received each tick.
+
+**Core Concepts:**
+- `GameStatePacket` is the primary data structure agents receive
+- Contains `CurrentIndex` (SetNumber, PlayNumber, TickNumber)
+- Contains `PlayTransactions` showing all historical moves
+- Player positions updated via `PlayModel.PlayerPacketModels`
+
+**Key Data Elements:**
+- **CurrentIndex:** Where we are in the game timeline
+- **PlayTransactions:** History of all moves this play
+- **PlayerPacketModels:** Current positions and states for all 14 players
+- **PassTargetingResult:** Outcome of any pass attempt
+- **EndOfPlayReasonType:** Why the play ended (if ended)
+
+**Strategic Considerations:**
+- Always check CurrentIndex before planning moves
+- Use PlayTransactions to understand move history
+- Track NeutralizedState for player recovery timing
+- See `foundation/game_state_packet.md` for complete structure
 
 ---
 
@@ -352,26 +524,30 @@ Attribute values influence game outcomes. Higher values generally improve perfor
 1. Field Awareness
 2. Player Knowledge
 3. Time Management
-4. Movement Planning
-5. Pass Planning
-6. Route Running
-7. Ball Carrier Movement
-8. Evasion
-9. Scoring Optimization
-10. Risk Assessment
+4. Formation Phase
+5. Game State Packet
+6. Movement Planning
+7. Pass Planning
+8. Route Running
+9. Ball Carrier Movement
+10. Evasion
+11. Scoring Optimization
+12. Risk Assessment
 
 ### Defensive Coach Agent
 **Required Skills:**
 1. Field Awareness
 2. Player Knowledge
 3. Time Management
-4. Movement Planning
-5. Pass Rush
-6. Coverage
-7. Interception
-8. Neutralization
-9. Scoring Optimization
-10. Risk Assessment
+4. Formation Phase
+5. Game State Packet
+6. Movement Planning
+7. Pass Rush
+8. Coverage
+9. Interception
+10. Neutralization
+11. Scoring Optimization
+12. Risk Assessment
 
 ---
 
