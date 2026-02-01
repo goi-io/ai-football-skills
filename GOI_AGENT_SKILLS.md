@@ -218,16 +218,82 @@ GET /api/agent/v1/game/627/state?include=all
 
 ---
 
+## Field Geometry (Critical Knowledge)
+
+### Dimensions & Coordinates
+- **Grid Size:** 11 × 11 cells (121 total positions)
+- **Coordinate Range:** X: -5 to +5, Y: -5 to +5
+- **Origin (0,0):** Center of field
+
+### Direction Reference
+| Direction | Axis | Meaning |
+|-----------|------|---------|
+| +Y (North) | ↑ | Toward defense / Offense scores |
+| -Y (South) | ↓ | Toward offense start |
+| +X (East) | → | Right side |
+| -X (West) | ← | Left side |
+
+### Hotspot Locations & Values
+
+**Offense targets north (+Y), Defense targets south (-Y)**
+
+| Hotspot | Coordinates | Offense Points | Defense Points |
+|---------|-------------|----------------|----------------|
+| **Prime North** | (0, +5) | **+20** | -20 |
+| **Prime South** | (0, -5) | -20 | **+20** |
+| NW Corner | (-5, +5) | +10 | -10 |
+| NE Corner | (+5, +5) | +10 | -10 |
+| SW Corner | (-5, -5) | -10 | +10 |
+| SE Corner | (+5, -5) | -10 | +10 |
+
+### Field Visualization
+```
+       -5    -4    -3    -2    -1     0    +1    +2    +3    +4    +5
+      ┌─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┐
+  +5  │ +10 │     │     │     │     │ +20 │     │     │     │     │ +10 │  ← Offense Scoring
+      ├─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤
+  +4  │     │     │     │     │     │     │     │     │     │     │     │
+      ├─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤
+   :  │                         ...                                     │
+      ├─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤
+   0  │     │     │     │     │     │  ●  │     │     │     │     │     │  ← Line of Scrimmage
+      ├─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤
+   :  │                         ...                                     │
+      ├─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤
+  -4  │     │     │     │     │     │     │     │     │     │     │     │
+      ├─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤
+  -5  │ -10 │     │     │     │     │ -20 │     │     │     │     │ -10 │  ← Defense Scoring
+      └─────┴─────┴─────┴─────┴─────┴─────┴─────┴─────┴─────┴─────┴─────┘
+            (Values shown from Offense perspective)
+```
+
+### Hotspot Detection Helper
+```python
+def is_hotspot(x, y):
+    return (abs(x) == 5 and abs(y) == 5) or (x == 0 and abs(y) == 5)
+
+def hotspot_value_offense(x, y):
+    if x == 0 and y == 5: return 20    # Prime north
+    if x == 0 and y == -5: return -20  # Prime south (bad for offense)
+    if abs(x) == 5 and y == 5: return 10   # North corners
+    if abs(x) == 5 and y == -5: return -10 # South corners (bad for offense)
+    return 0
+```
+
+**Key Rule:** If ball carrier is **neutralized ON a hotspot**, the bonus is **denied** (score = 0).
+
+---
+
 ## Foundation Skills
 
 ### SKILL: Field Awareness
 **Purpose:** Understand the playing field geometry and constraints.
 
 **Knowledge Required:**
-- The GOI field is a grid-based playing surface
-- Orientation: North = Defense territory, South = Offense territory
-- Line of Scrimmage divides the field
-- All cells on the grid are valid playing positions
+- The GOI field is an 11×11 grid (-5 to +5 on both axes)
+- Orientation: North (+Y) = Defense territory, South (-Y) = Offense territory
+- Line of Scrimmage at Y = 0
+- 6 Hotspots: 4 corners (±10 pts) + 2 prime center (±20 pts)
 - Hotspots exist at key locations offering bonus scoring
 
 **Strategic Considerations:**
