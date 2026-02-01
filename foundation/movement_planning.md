@@ -14,7 +14,7 @@ Plan player movements and understand mobility constraints.
 ## Movement Fundamentals
 
 ### Movement Rate
-- Players move a limited distance per tick
+- Players can move **one grid cell per tick** (in any direction)
 - Players may stay in place
 - Movement is constrained by grid boundaries
 
