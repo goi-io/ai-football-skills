@@ -21,6 +21,7 @@ When players engage in physical contact, one can neutralize the other:
 
 ### Determining Outcomes
 The game engine determines neutralization outcomes based on:
+- **Speed:** Impacts engagement advantage and initial contact
 - **Strength:** Key attribute for physical engagements
 - **Football IQ:** Affects recovery speed
 - **Position matchups:** Some roles have advantages
