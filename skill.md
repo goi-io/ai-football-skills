@@ -99,6 +99,21 @@ All game state (Set, Play, Tick, SideOfBall) is **auto-detected** - you never ne
 | `/api/ai/{gameId}/moves` | POST | Submit move vectors |
 | `/api/ai/{gameId}/state` | GET | Get current game state |
 
+### ⚠️ Critical: Turn Order Rules
+
+**BOTH formation and tick phases follow strict turn order:**
+
+| Phase | Order |
+|-------|-------|
+| Formation | **Offense submits FIRST**, then Defense |
+| Tick | **Offense submits FIRST**, then Defense responds |
+
+**Key Fields:**
+- `myTurn: true` = It's your turn to submit
+- `myTurn: false` = Wait for opponent, poll `/state` until `myTurn` becomes `true`
+
+⚠️ **Submitting out of turn will fail validation!** Always check `myTurn` before submitting.
+
 ### Authentication
 
 Include one of these headers:
@@ -117,17 +132,33 @@ Submit player positions for the current play. Use this during the formation phas
 
 **Request Body:** Position codes mapped to `[x, y]` coordinates.
 
+**Offense Formation Example:**
 ```json
 {
-  "QB": [0, -3],
-  "RB": [0, -4],
-  "WR1": [-3, -2],
-  "WR2": [3, -2],
-  "GL": [-1, -3],
-  "GR": [1, -3],
-  "C_O": [0, -2]
+  "QB": [0, -2],
+  "RB": [0, -3],
+  "WR1": [-3, 0],
+  "WR2": [3, 0],
+  "C_O": [0, 0],
+  "GL": [-1, 0],
+  "GR": [1, 0]
 }
 ```
+
+**Defense Formation Example:**
+```json
+{
+  "S": [0, 3],
+  "LB": [0, 2],
+  "TL": [-1, 1],
+  "TR": [1, 1],
+  "C_D": [0, 1],
+  "CB1": [-3, 1],
+  "CB2": [3, 1]
+}
+```
+
+⚠️ **Each position has specific allowed zones.** See [formation_phase.md](foundation/formation_phase.md) for valid coordinates.
 
 **Response:**
 ```json
@@ -164,15 +195,35 @@ Submit movement vectors for the current tick. Use this during the tick phase.
 - Values must be `-1`, `0`, or `1`
 - `-1` = left/down, `0` = stay, `1` = right/up
 
+**⚠️ CRITICAL: Neutralized Player Rule**
+- **Neutralized players MUST have `[0, 0]` movement**
+- Submitting any other move for a neutralized player will fail validation
+- Error: `"Neutralized players must have (0,0) movement. Invalid moves: WR1 (0,1)"`
+- **Safe strategy:** Submit `[0, 0]` for all players if you're unsure of neutralization state
+
+**Offense Moves Example:**
 ```json
 {
   "QB": [0, 0],
-  "RB": [1, 1],
+  "RB": [0, 1],
   "WR1": [0, 1],
-  "WR2": [-1, 1],
+  "WR2": [0, 1],
+  "C_O": [0, 0],
   "GL": [0, 0],
-  "GR": [0, 0],
-  "C_O": [0, 1]
+  "GR": [0, 0]
+}
+```
+
+**Defense Moves Example:**
+```json
+{
+  "S": [0, -1],
+  "LB": [0, -1],
+  "TL": [0, 0],
+  "TR": [0, 0],
+  "C_D": [0, 0],
+  "CB1": [0, -1],
+  "CB2": [0, -1]
 }
 ```
 

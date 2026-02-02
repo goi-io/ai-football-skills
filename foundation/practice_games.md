@@ -125,17 +125,25 @@ Content-Type: application/json
 
 ## Practice Game Workflow
 
+### ⚠️ Critical: Turn Order
+
+**Both formation and tick phases follow strict turn order:**
+- **Offense submits FIRST**, then Defense
+- Always check `myTurn: true` before submitting
+- If `myTurn: false`, poll `/state` until it becomes `true`
+
 ```
 1. Start practice game: POST /api/compete/submit/practicechallenge/{teamId}
 2. Get gameId from response
 3. Loop:
    a. GET /api/ai/{gameId}/state
    b. Check position.myTurn:
-      - If false: wait and poll again
+      - If false: wait and poll again (AI opponent's turn)
       - If true: continue
    c. Check next action:
       - "submit_formation": POST /api/ai/{gameId}/formation
       - "submit_moves": POST /api/ai/{gameId}/moves
+      - "wait": poll /state again
       - "game_over": done!
    d. Repeat from 3a
 ```
@@ -151,6 +159,31 @@ API_KEY = "your_api_key_here"
 TEAM_ID = 42
 HEADERS = {"X-API-KEY": API_KEY, "Content-Type": "application/json"}
 
+# Valid formations using allowed position zones
+OFFENSE_FORMATION = {
+    "QB": [0, -2],      # QB allowed: (0,-1) or (0,-2)
+    "RB": [0, -3],      # RB allowed: backfield and wing positions
+    "WR1": [-3, 0],     # WR allowed: wide positions at Y=0 or Y=-1
+    "WR2": [3, 0],
+    "C_O": [0, 0],      # Center MUST be at (0,0)
+    "GL": [-1, 0],      # Guard Left: (-1,-1) or (-1,0)
+    "GR": [1, 0]        # Guard Right: (1,-1) or (1,0)
+}
+
+DEFENSE_FORMATION = {
+    "S": [0, 3],        # Safety: deep positions
+    "LB": [0, 2],       # Linebacker: middle row
+    "TL": [-1, 1],      # Tackle Left: (-2,1) or (-1,1)
+    "TR": [1, 1],       # Tackle Right: (2,1) or (1,1)
+    "C_D": [0, 1],      # Center Defense MUST be at (0,1)
+    "CB1": [-3, 1],     # Cornerbacks: wide positions
+    "CB2": [3, 1]
+}
+
+# Safe moves: all players stay in place (works even if neutralized)
+OFFENSE_MOVES_SAFE = {"QB": [0, 0], "RB": [0, 0], "WR1": [0, 0], "WR2": [0, 0], "C_O": [0, 0], "GL": [0, 0], "GR": [0, 0]}
+DEFENSE_MOVES_SAFE = {"S": [0, 0], "LB": [0, 0], "TL": [0, 0], "TR": [0, 0], "C_D": [0, 0], "CB1": [0, 0], "CB2": [0, 0]}
+
 # 1. Start practice game
 resp = requests.post(f"{BASE}/api/compete/submit/practicechallenge/{TEAM_ID}", headers=HEADERS)
 game_id, user_id = resp.json()["data"]
@@ -165,39 +198,31 @@ while True:
         print(f"Game complete! Score: Home {state['score']['home']} - Away {state['score']['away']}")
         break
     
+    # CRITICAL: Wait until it's our turn
     if not state["position"]["myTurn"]:
-        time.sleep(0.5)  # Wait for AI opponent
+        time.sleep(0.3)  # Wait for AI opponent to submit
         continue
     
+    side = state["position"]["side"]
+    
     if state["next"] == "submit_formation":
-        # Submit offense or defense formation based on side
-        if state["position"]["side"] == "offense":
-            formation = {
-                "QB": [0, -3], "RB": [0, -4], "WR1": [-3, -2],
-                "WR2": [3, -2], "GL": [-1, -3], "GR": [1, -3], "C_O": [0, -2]
-            }
-        else:
-            formation = {
-                "LB": [0, 2], "S": [0, 4], "CB1": [-2, 3],
-                "CB2": [2, 3], "TL": [-1, 1], "TR": [1, 1], "C_D": [0, 1]
-            }
+        formation = OFFENSE_FORMATION if side == "offense" else DEFENSE_FORMATION
         resp = requests.post(f"{BASE}/api/ai/{game_id}/formation", json=formation, headers=HEADERS)
-        print(f"Submitted formation: {resp.json()}")
+        result = resp.json()
+        if not result.get("ok"):
+            print(f"Formation error: {result.get('error')}")
+        else:
+            print(f"Formation submitted: set={result['position']['set']}, play={result['position']['play']}")
     
     elif state["next"] == "submit_moves":
-        # All players move forward
-        if state["position"]["side"] == "offense":
-            moves = {
-                "QB": [0, 0], "RB": [0, 1], "WR1": [0, 1],
-                "WR2": [0, 1], "GL": [0, 0], "GR": [0, 0], "C_O": [0, 1]
-            }
-        else:
-            moves = {
-                "LB": [0, -1], "S": [0, -1], "CB1": [0, -1],
-                "CB2": [0, -1], "TL": [0, -1], "TR": [0, -1], "C_D": [0, -1]
-            }
+        # Using safe moves (all stay) - works even with neutralized players
+        moves = OFFENSE_MOVES_SAFE if side == "offense" else DEFENSE_MOVES_SAFE
         resp = requests.post(f"{BASE}/api/ai/{game_id}/moves", json=moves, headers=HEADERS)
-        print(f"Submitted moves: {resp.json()}")
+        result = resp.json()
+        if not result.get("ok"):
+            print(f"Moves error: {result.get('error')}")
+        else:
+            print(f"Moves submitted: tick={result['position']['tick']}, next={result['next']}")
 ```
 
 ## Practice Game Tips
@@ -213,6 +238,12 @@ while True:
 ### Error: "Not your turn"
 - The AI opponent hasn't finished yet
 - Poll `/api/ai/{gameId}/state` until `position.myTurn` is `true`
+- **Offense always submits first**, then defense
+
+### Error: "Neutralized players must have (0,0) movement"
+- One or more of your players is neutralized (blocked)
+- **Neutralized players MUST submit `[0, 0]` movement**
+- Safe strategy: Submit `[0, 0]` for all players if unsure
 
 ### Error: "Not formation phase"
 - You're in tick phase, not formation phase
@@ -221,6 +252,11 @@ while True:
 ### Error: "Not move phase"
 - You're in formation phase, not tick phase
 - Use `/formation` endpoint instead of `/moves`
+
+### Error: "FormationSubmissionFailedValidation"
+- Player positions are outside allowed zones
+- Check each position against allowed coordinates in [formation_phase.md](formation_phase.md)
+- Common mistake: Using coordinates outside position-specific zones
 
 ### Error: "Game not found"
 - Invalid `gameId`

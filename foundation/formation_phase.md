@@ -16,11 +16,26 @@ Understand the formation phase where players are positioned on the field before 
 
 ## Formation Phase Overview
 
-**When:** Before each play begins, both teams submit formations simultaneously.
+**When:** Before each play begins.
 
 **What:** Each team positions all 7 players within designated zones on the field.
 
 **Why:** Starting positions determine route options, coverage matchups, and overall play strategy.
+
+### ⚠️ Critical: Turn Order
+
+**Offense ALWAYS submits formation FIRST, then Defense.**
+
+| Your Side | Turn Order |
+|-----------|------------|
+| Offense | Submit immediately when `myTurn: true` |
+| Defense | Wait until offense submits, then `myTurn` becomes `true` |
+
+The `myTurn` field in the game state indicates when you can submit:
+- `myTurn: true` + `TurnType: Formation` = Submit your formation now
+- `myTurn: false` = Wait and poll `/state` until it changes
+
+⚠️ **Submitting out of turn will fail!**
 
 ---
 
@@ -158,14 +173,13 @@ Use the simplified AI API endpoint. All game state (Set, Play, Tick, SideOfBall)
 
 **Endpoint:** `POST /api/ai/{gameId}/formation`
 
-**Request Body:** Position codes mapped to `[x, y]` coordinates.
-
+**Offense Formation Example:**
 ```json
 {
-  "QB": [0, -1],
-  "RB": [1, -2],
-  "WR1": [-4, 0],
-  "WR2": [4, 0],
+  "QB": [0, -2],
+  "RB": [0, -3],
+  "WR1": [-3, 0],
+  "WR2": [3, 0],
   "C_O": [0, 0],
   "GL": [-1, 0],
   "GR": [1, 0]
@@ -175,17 +189,17 @@ Use the simplified AI API endpoint. All game state (Set, Play, Tick, SideOfBall)
 **Defense Example:**
 ```json
 {
-  "S": [0, 4],
+  "S": [0, 3],
   "LB": [0, 2],
-  "CB1": [-4, 1],
-  "CB2": [4, 1],
-  "C_D": [0, 1],
   "TL": [-1, 1],
-  "TR": [1, 1]
+  "TR": [1, 1],
+  "C_D": [0, 1],
+  "CB1": [-3, 1],
+  "CB2": [3, 1]
 }
 ```
 
-**Response:**
+**Response (offense submitted first, waiting for defense):**
 ```json
 {
   "ok": true,

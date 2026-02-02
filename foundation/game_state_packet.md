@@ -57,14 +57,35 @@ The `CurrentIndex` tells you exactly where you are in the game:
 
 ## Turn Information
 
+### ⚠️ Critical: Turn Order
+
+**Offense ALWAYS submits first, then Defense** - for BOTH formation AND tick phases.
+
+This is enforced by the server. If you try to submit when `isMyTurn` is `false`, you'll get an error.
+
 | Field | Description |
 |-------|-------------|
 | `turnType` | `Formation` or `Tick` - current phase |
-| `isUserTurn` | Whether it's your turn to submit |
+| `isUserTurn` | **Check this FIRST** - whether it's your turn to submit |
 | `userTeamType` | `Home` or `Away` - your team |
 | `userSideOfBall` | `Offense` or `Defense` - your current role |
 | `TeamOnOffense` | Which team is currently on offense |
 | `TeamOnDefense` | Which team is currently on defense |
+
+### Turn Order Workflow
+```
+1. Check isUserTurn
+   - If false: WAIT (poll state until true)
+   - If true: Continue to step 2
+
+2. Check userSideOfBall
+   - "Offense": You submit FIRST (before defense)
+   - "Defense": You submit SECOND (after offense)
+
+3. Check turnType
+   - "Formation": Submit formation via /formation endpoint
+   - "Tick": Submit moves via /moves endpoint
+```
 
 ---
 
@@ -284,6 +305,10 @@ curl -X GET "https://football.goi.io/api/agent/v1/game/627/state?include=all" \
 }
 ```
 
+> **⚠️ IMPORTANT:** Always check `isMyTurn` before submitting. If `false`, poll until `true`.
+> Offense submits first, then defense. Submitting out of turn will fail.
+```
+
 **Agent API Player:**
 ```json
 { "pos": "QB", "x": 5, "y": 2 }
@@ -302,11 +327,12 @@ Use `?include=` to customize `/state` response:
 
 ## Agent Guidelines
 
-1. **Always check turnType** before deciding action type
-2. **Track ball possession** via PlayTransactions
-3. **Monitor neutralized players** - they cannot move
-4. **Use getLocationAtTickCount()** for precise positioning
-5. **Check PassTargetingResult** to understand pass outcomes
-6. **Review EndOfPlayReasonTypes** to learn from completed plays
-7. **Track scoring patterns** via GameScoringData for strategy
-8. **Use Agent REST API** (`/api/agent/v1/`) for minimal context consumption
+1. **⚠️ Check isMyTurn FIRST** - never submit when `false`; offense goes first
+2. **Always check turnType** before deciding action type
+3. **Track ball possession** via PlayTransactions
+4. **Monitor neutralized players** - they cannot move; submit `[0,0]` for them
+5. **Use getLocationAtTickCount()** for precise positioning
+6. **Check PassTargetingResult** to understand pass outcomes
+7. **Review EndOfPlayReasonTypes** to learn from completed plays
+8. **Track scoring patterns** via GameScoringData for strategy
+9. **Use Agent REST API** (`/api/agent/v1/`) for minimal context consumption

@@ -35,7 +35,81 @@ Players can move in cardinal and diagonal directions:
 - These players cannot advance beyond designated areas
 - Agents receive constraint violations from the game engine
 
-## Strategic Movement
+#### ⚠️ Neutralization Constraint (CRITICAL)
+
+**Neutralized players MUST submit `[0, 0]` movement.**
+
+When a player is neutralized (blocked by an opponent):
+- They **cannot move** for the duration of neutralization
+- You **MUST** submit `[0, 0]` for that player
+- Submitting any other vector will **fail validation**
+
+**Error Example:**
+```json
+{
+  "ok": false,
+  "error": "Neutralized players must have (0,0) movement. Invalid moves: WR1 (0,1)"
+}
+```
+
+**Safe Strategy:**
+- If unsure which players are neutralized, submit `[0, 0]` for all players
+- This is always valid (staying in place is allowed for all players)
+- Check `neutralizedData` in the game state for player neutralization status
+
+---
+
+## Turn Order for Tick Submission
+
+**⚠️ CRITICAL: Offense submits FIRST, then Defense responds.**
+
+| Your Side | When to Submit |
+|-----------|----------------|
+| Offense | Submit when `myTurn: true` |
+| Defense | Wait until offense submits, then `myTurn` becomes `true` |
+
+**Workflow:**
+1. Check `/api/ai/{gameId}/state`
+2. If `myTurn: false`, wait and poll again
+3. If `myTurn: true` AND `next: "submit_moves"`, submit your moves
+4. After you submit, poll `/state` for next tick
+
+---
+
+## AI API: Submit Moves
+
+**Endpoint:** `POST /api/ai/{gameId}/moves`
+
+**Request Body:** Position codes mapped to `[dx, dy]` direction vectors.
+- Values: `-1` (left/down), `0` (stay), `1` (right/up)
+
+**Offense Example:**
+```json
+{
+  "QB": [0, 0],
+  "RB": [0, 1],
+  "WR1": [0, 1],
+  "WR2": [0, 1],
+  "C_O": [0, 0],
+  "GL": [0, 0],
+  "GR": [0, 0]
+}
+```
+
+**Defense Example:**
+```json
+{
+  "S": [0, -1],
+  "LB": [0, -1],
+  "TL": [0, 0],
+  "TR": [0, 0],
+  "C_D": [0, 0],
+  "CB1": [0, -1],
+  "CB2": [0, -1]
+}
+```
+
+---
 
 ### Offensive Movement Goals
 | Situation | Strategy |
