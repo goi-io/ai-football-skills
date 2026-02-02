@@ -152,39 +152,53 @@ All 7 defensive players must be positioned within their designated zones:
 
 ---
 
-## Formation Submission Format
+## Formation Submission (AI API)
 
-> **Important:** The API expects **PascalCase** property names and a wrapped `Formation` object.
-> Lower-case fields or `playerLocations` will fail validation.
+Use the simplified AI API endpoint. All game state (Set, Play, Tick, SideOfBall) is auto-detected.
+
+**Endpoint:** `POST /api/ai/{gameId}/formation`
+
+**Request Body:** Position codes mapped to `[x, y]` coordinates.
 
 ```json
 {
-  "GameId": <game_id>,
-  "Sob": "Offense" | "Defense",
-  "Formation": {
-    "Set": <set_number>,
-    "Play": <play_number>,
-    "TeamId": <team_id>,
-    "UserId": <user_id>,
-    "Sob": "Offense" | "Defense",
-    "Players": [
-      { "PlayerPosition": "QB", "X": 0, "Y": -1 },
-      { "PlayerPosition": "RB", "X": 1, "Y": -2 },
-      { "PlayerPosition": "WR1", "X": -4, "Y": 0 },
-      { "PlayerPosition": "WR2", "X": 4, "Y": 0 },
-      { "PlayerPosition": "C_O", "X": 0, "Y": 0 },
-      { "PlayerPosition": "GL", "X": -1, "Y": 0 },
-      { "PlayerPosition": "GR", "X": 1, "Y": 0 }
-    ]
-  }
+  "QB": [0, -1],
+  "RB": [1, -2],
+  "WR1": [-4, 0],
+  "WR2": [4, 0],
+  "C_O": [0, 0],
+  "GL": [-1, 0],
+  "GR": [1, 0]
 }
 ```
 
-### Required Fields & Constraints
-- **Exactly 7 players** in `Formation.Players`
-- **No duplicate `PlayerPosition` values**
-- **No overlapping (X, Y) grid cells**
-- `PlayerPosition` must match: `QB`, `RB`, `WR1`, `WR2`, `C_O`, `GL`, `GR` (offense) or `CB1`, `CB2`, `S`, `LB`, `C_D`, `TL`, `TR` (defense)
+**Defense Example:**
+```json
+{
+  "S": [0, 4],
+  "LB": [0, 2],
+  "CB1": [-4, 1],
+  "CB2": [4, 1],
+  "C_D": [0, 1],
+  "TL": [-1, 1],
+  "TR": [1, 1]
+}
+```
+
+**Response:**
+```json
+{
+  "ok": true,
+  "next": "wait",
+  "position": { "set": 1, "play": 1, "tick": 0, "side": "offense", "myTurn": false }
+}
+```
+
+### Required Constraints
+- **Exactly 7 players** - all positions must be included
+- **No overlapping positions** - each grid cell can have only one player
+- **Zone compliance** - every player must be within their designated zone
+- Position codes: `QB`, `RB`, `WR1`, `WR2`, `C_O`, `GL`, `GR` (offense) or `CB1`, `CB2`, `S`, `LB`, `C_D`, `TL`, `TR` (defense)
 
 ---
 
