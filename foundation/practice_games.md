@@ -168,8 +168,7 @@ The MCP server provides these practice game tools:
   "arguments": {
     "mode": "practice",
     "request": {
-      "gameId": 1234,
-      "stateIdsAlreadyInDb": []
+      "gameId": 1234
     }
   }
 }

@@ -182,6 +182,18 @@ curl -X GET "https://football.goi.io/api/agent/v1/game/{gameId}/state?include=pl
   -H "X-API-KEY: your_api_key_here"
 ```
 
+**Standard API (required body field):**
+When using the non-agent endpoint `POST /api/games/getstate`, the request body **must** 
+
+```json
+{
+  "GameId": 1234,
+  "SetNumber": null,
+  "PlayNumber": null,
+  "TickNumber": null
+}
+```
+
 **Step 3: Submit your action (via MCP or standard API)**
 
 The Agent REST API is read-only. To submit moves or formations, use either:
