@@ -21,8 +21,7 @@ When players engage in physical contact, one can neutralize the other:
 
 ### Determining Outcomes
 The game engine determines neutralization outcomes based on:
-- **Speed:** Impacts engagement advantage and initial contact
-- **Strength:** Key attribute for physical engagements
+- **Speed:** Key attribute for engagement advantage and initial contact
 - **Football IQ:** Affects recovery speed
 - **Hands:** Affects recovery speed
 - **Position matchups:** Some roles have advantages
@@ -63,12 +62,12 @@ Higher attribute values generally improve outcomes, but exact calculations are p
 ## Engagement Decisions
 
 ### When to Engage
-- Clear advantage (Strength matchup favorable)
+- Clear advantage (Speed matchup favorable)
 - High-value target (ball carrier, QB)
 - Protecting critical objective
 
 ### When to Avoid
-- Unfavorable matchup (stronger opponent)
+- Unfavorable matchup (faster opponent)
 - Better positioning available
 - Coverage responsibility more important
 
@@ -76,12 +75,12 @@ Higher attribute values generally improve outcomes, but exact calculations are p
 
 ### For Ball Carriers
 - Track nearby defenders
-- Compare Strength attributes
-- Route around stronger defenders
-- Accept short neutralization from weak defenders if beneficial
+- Compare Speed attributes
+- Route around faster defenders
+- Accept short neutralization from defenders with weaker Football IQ and Hands if beneficial
 
 ### Path Planning
-- Avoid adjacent cells with stronger defenders
+- Avoid adjacent cells with faster defenders
 - Use speed to maintain distance
 - Cut back when pursuit commits
 
@@ -94,8 +93,8 @@ Higher attribute values generally improve outcomes, but exact calculations are p
 - Plan for recovery timing
 
 ### Attribute Awareness
-- Know your players' Strengths
-- Know opponents' Strengths
+- Know your players' Speeds
+- Know opponents' Speeds
 - Match favorable engagements
 
 ### Positional Sacrifice

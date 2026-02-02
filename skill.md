@@ -564,7 +564,7 @@ Attribute values influence game outcomes. Higher values generally improve perfor
 
 **Mechanics:**
 - Neutralization disables a player temporarily
-- Duration varies based on **Speed, Strength, Football IQ**, and position matchups
+- Duration varies based on **Speed, Football IQ, Hands**, and position matchups
 - Neutralized players cannot move until recovered
 
 **Strategic Considerations:**
