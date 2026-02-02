@@ -8,7 +8,7 @@ This directory contains modular skills that AI agents can load to coach GOI team
 ```
 agents/
 ├── skills/
-│   ├── GOI_AGENT_SKILLS.md          # Master reference document
+│   ├── skill.md                     # Master reference document
 │   │
 │   ├── foundation/                   # Core knowledge (required by all agents)
 │   │   ├── field_awareness.md        # Grid, territories, hotspots

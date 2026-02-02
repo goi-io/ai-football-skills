@@ -28,7 +28,7 @@ This document defines the strategic skills an AI agent needs to coach a GOI team
 
 | File | Path |
 |------|------|
-| **GOI_AGENT_SKILLS.md** (this file) | `ai-football-skills/GOI_AGENT_SKILLS.md` |
+| **skill.md** (this file) | `ai-football-skills/skill.md` |
 | **field_awareness.md** | `ai-football-skills/foundation/field_awareness.md` |
 | **player_knowledge.md** | `ai-football-skills/foundation/player_knowledge.md` |
 | **movement_planning.md** | `ai-football-skills/foundation/movement_planning.md` |
