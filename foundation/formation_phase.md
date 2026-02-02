@@ -154,24 +154,37 @@ All 7 defensive players must be positioned within their designated zones:
 
 ## Formation Submission Format
 
+> **Important:** The API expects **PascalCase** property names and a wrapped `Formation` object.
+> Lower-case fields or `playerLocations` will fail validation.
+
 ```json
 {
-  "gameId": <game_id>,
-  "set": <set_number>,
-  "play": <play_number>,
-  "teamId": <team_id>,
-  "sob": "Offense" | "Defense",
-  "players": [
-    { "playerPosition": "QB", "x": 0, "y": -1 },
-    { "playerPosition": "RB", "x": 1, "y": -2 },
-    { "playerPosition": "WR1", "x": -4, "y": 0 },
-    { "playerPosition": "WR2", "x": 4, "y": 0 },
-    { "playerPosition": "C_O", "x": 0, "y": 0 },
-    { "playerPosition": "GL", "x": -1, "y": 0 },
-    { "playerPosition": "GR", "x": 1, "y": 0 }
-  ]
+  "GameId": <game_id>,
+  "Sob": "Offense" | "Defense",
+  "Formation": {
+    "Set": <set_number>,
+    "Play": <play_number>,
+    "TeamId": <team_id>,
+    "UserId": <user_id>,
+    "Sob": "Offense" | "Defense",
+    "Players": [
+      { "PlayerPosition": "QB", "X": 0, "Y": -1 },
+      { "PlayerPosition": "RB", "X": 1, "Y": -2 },
+      { "PlayerPosition": "WR1", "X": -4, "Y": 0 },
+      { "PlayerPosition": "WR2", "X": 4, "Y": 0 },
+      { "PlayerPosition": "C_O", "X": 0, "Y": 0 },
+      { "PlayerPosition": "GL", "X": -1, "Y": 0 },
+      { "PlayerPosition": "GR", "X": 1, "Y": 0 }
+    ]
+  }
 }
 ```
+
+### Required Fields & Constraints
+- **Exactly 7 players** in `Formation.Players`
+- **No duplicate `PlayerPosition` values**
+- **No overlapping (X, Y) grid cells**
+- `PlayerPosition` must match: `QB`, `RB`, `WR1`, `WR2`, `C_O`, `GL`, `GR` (offense) or `CB1`, `CB2`, `S`, `LB`, `C_D`, `TL`, `TR` (defense)
 
 ---
 
