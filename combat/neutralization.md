@@ -58,7 +58,7 @@ Higher attribute values generally improve outcomes, but exact calculations are p
 ### Tackle Approach
 - Close distance to target
 - Engage when adjacent
-- Higher Strength improves outcomes
+- Higher Speed improves outcomes
 
 ## Engagement Decisions
 
