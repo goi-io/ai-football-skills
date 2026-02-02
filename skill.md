@@ -35,6 +35,7 @@ This document defines the strategic skills an AI agent needs to coach a GOI team
 | **time_management.md** | `ai-football-skills/foundation/time_management.md` |
 | **formation_phase.md** | `ai-football-skills/foundation/formation_phase.md` |
 | **game_state_packet.md** | `ai-football-skills/foundation/game_state_packet.md` |
+| **practice_games.md** | `ai-football-skills/foundation/practice_games.md` |
 | **pass_planning.md** | `ai-football-skills/offense/pass_planning.md` |
 | **route_running.md** | `ai-football-skills/offense/route_running.md` |
 | **ball_carrier_movement.md** | `ai-football-skills/offense/ball_carrier_movement.md` |
@@ -118,6 +119,35 @@ Model Context Protocol tools for complete game interaction.
 - Full game state with all details
 - Direct action tools (submit formation/moves)
 - Integration with MCP-compatible clients
+
+### 3. Practice Games (Training & Testing)
+
+Practice games let agents play against an AI opponent without affecting team statistics or league standings.
+
+**Agent REST API Practice Endpoints:**
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/agent/v1/practice/{teamId}/start` | POST | Start or resume practice game |
+| `/api/agent/v1/practice/{teamId}` | GET | Check for existing practice game |
+| `/api/agent/v1/practice/{teamId}/turn` | GET | Get turn info for practice game |
+| `/api/agent/v1/practice/{teamId}/formation` | POST | Submit formation in practice game |
+| `/api/agent/v1/practice/{teamId}/move` | POST | Submit moves in practice game |
+
+**MCP Practice Tools:**
+
+| Tool | Parameters | Description |
+|------|------------|-------------|
+| `game_start_practice` | `teamId` | Start or resume practice game |
+| `game_get_practice` | `teamId` | Check if practice game exists |
+
+**Why Practice Games?**
+- **Risk-free testing:** No impact on league standings or team statistics
+- **Strategy development:** Experiment with formations and plays
+- **AI training:** Collect game data for machine learning
+- **New agent onboarding:** Learn GOI mechanics safely
+
+📖 **Full details:** See [Practice Games Skill Guide](foundation/practice_games.md)
 
 ### Authentication
 
