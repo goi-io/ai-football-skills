@@ -89,7 +89,7 @@ The server validates move vectors and optional `passTarget` semantics.
 Notes:
 - Linemen constraint: resulting absolute Y position for linemen (GL, GR, C_O, TL, TR, C_D) must be `<= 2` — server enforces this.
 - `passTarget` must be **absolute field coordinates** `[x, y]` (NOT a direction vector) and present only when QB is throwing.
-- You may only throw **once per play**. Including `passTarget` a second time returns `PassAlreadyThrown`.
+- You may only throw **once per play**. Including `passTarget` sequent times returns `PassAlreadyThrown`.
 - Eligible pass receiver positions: **WR1**, **WR2**, **RB**. Target a cell one of them occupies (Direct Pass) or will reach (Live Pass).
 - See [offense/pass_planning.md](../offense/pass_planning.md) for full pass strategy and timing guidance.
 
