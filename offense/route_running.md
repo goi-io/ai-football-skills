@@ -78,6 +78,7 @@ Receivers can work together:
 - Route completion should align with QB's throwing windows
 - Arrive at target when QB is ready to throw
 - Don't outrun the pattern
+- Use the QB's `QbTargetPattern` from the AI state response each tick to align route endpoints with reachable throw cells.
 
 ### Reception Advantage Rule
 - **Hands attribute does NOT affect receptions**

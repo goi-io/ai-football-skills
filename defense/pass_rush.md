@@ -56,6 +56,7 @@ Move defensive players to disrupt passing plays through pressure and lane blocki
 - Track QB eye movement if available
 - Anticipate throw timing based on route development
 - Adjust lane blocking based on receiver positions
+- Use the QB's `QbTargetPattern` from the AI state response each tick to prioritize lane blocks against likely targets.
 
 ## Situational Adjustments
 

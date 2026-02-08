@@ -47,6 +47,7 @@ When QB throws to an empty target cell:
 - Be close enough to reach ball
 - Understand QB's pass pattern
 - Anticipate likely targets
+- Use the QB's `QbTargetPattern` from the AI state response each tick to identify reachable target cells.
 
 ### Timing
 - Break on the ball when thrown

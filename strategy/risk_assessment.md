@@ -18,12 +18,14 @@ Evaluate play options considering probability of success and failure consequence
 - **Neutralization:** Ball carrier tackled
 - **Turnover position:** Losing ball in bad location
 - **Time loss:** Wasted ticks on failed plays
+- Factor in the QB's `QbTargetPattern` from the AI state response each tick when evaluating pass risk.
 
 ### Defensive Risks
 - **Big play given up:** Offense scores many points
 - **Coverage breakdown:** Receiver gets wide open
 - **Overcommitment:** Gamble fails, offense benefits
 - **Hotspot exposure:** High-value areas unprotected
+- Use the QB's `QbTargetPattern` from the AI state response each tick to gauge likely target windows when choosing coverage risk.
 
 ## Risk Categories
 

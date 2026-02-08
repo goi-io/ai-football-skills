@@ -54,6 +54,7 @@ Combination approach:
 - Watch for route breaks
 - Anticipate throws
 - Break on the ball when thrown
+- Use the QB's `QbTargetPattern` from the AI state response each tick to anticipate likely throw windows.
 
 ### Communication
 - Pass off receivers crossing zones (zone)

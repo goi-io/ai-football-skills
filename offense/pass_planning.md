@@ -117,6 +117,7 @@ The `passTarget` coordinate should be the cell where one of these receivers will
 - Pattern position is **relative to QB's current location** — it defines offsets, not absolute cells.
 - As QB moves, the absolute target positions **shift with the QB**. The engine recalculates: `absolute_target = base_pattern_offset + qb_current_position`.
 - Agents receive the computed absolute target points in the game state (via the QB's `QbTargetPattern` in the AI state endpoint).
+- Retrieve `QbTargetPattern` from the QB object in the AI state response each tick (the same payload you already use for positions).
 - `passTarget` submitted in the moves request must be one of these absolute target points (or very near one).
 
 ---

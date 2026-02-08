@@ -79,6 +79,7 @@ When carrier has strength advantage:
 - Weigh running gain vs. passing options
 - Keep passing available if receivers are open
 - Protect the ball above all
+- If considering a scramble-and-throw, use the QB's `QbTargetPattern` from the AI state response each tick to evaluate reachable pass targets after the move.
 
 ## Strategic Considerations
 

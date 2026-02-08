@@ -43,6 +43,7 @@ Exact hotspot locations and values are provided in game state.
 - Deep passes: Higher potential, higher risk
 - Short passes: Lower potential, safer
 - Consider time remaining and score situation
+- Use the QB's `QbTargetPattern` from the AI state response each tick to identify reachable throw cells when weighing pass value.
 
 ### Hotspot Targeting
 - Identify reachable hotspots
@@ -60,6 +61,7 @@ Exact hotspot locations and values are provided in game state.
 - Position for interception opportunities
 - Deeper interceptions score more
 - Balance ball-hawking vs. coverage
+- Use the QB's `QbTargetPattern` from the AI state response each tick to prioritize high-value interception zones.
 
 ### Hotspot Defense
 - Priority coverage of high-value zones
