@@ -26,28 +26,30 @@ This document defines the strategic skills an AI agent needs to coach a GOI team
 
 ## Skill Files
 
-| File | Path |
-|------|------|
-| **skill.md** (this file) | `ai-football-skills/skill.md` |
-| **field_awareness.md** | `ai-football-skills/foundation/field_awareness.md` |
-| **player_knowledge.md** | `ai-football-skills/foundation/player_knowledge.md` |
-| **movement_planning.md** | `ai-football-skills/foundation/movement_planning.md` |
-| **time_management.md** | `ai-football-skills/foundation/time_management.md` |
-| **formation_phase.md** | `ai-football-skills/foundation/formation_phase.md` |
-| **game_state_packet.md** | `ai-football-skills/foundation/game_state_packet.md` |
-| **practice_games.md** | `ai-football-skills/foundation/practice_games.md` |
-| **game_lifecycle.md** | `ai-football-skills/foundation/game_lifecycle.md` |
-| **pass_planning.md** | `ai-football-skills/offense/pass_planning.md` |
-| **route_running.md** | `ai-football-skills/offense/route_running.md` |
-| **ball_carrier_movement.md** | `ai-football-skills/offense/ball_carrier_movement.md` |
-| **scoring.md** | `ai-football-skills/offense/scoring.md` |
-| **pass_rush.md** | `ai-football-skills/defense/pass_rush.md` |
-| **coverage.md** | `ai-football-skills/defense/coverage.md` |
-| **interception.md** | `ai-football-skills/defense/interception.md` |
-| **neutralization.md** | `ai-football-skills/combat/neutralization.md` |
-| **penalties.md** | `ai-football-skills/combat/penalties.md` |
-| **scoring_optimization.md** | `ai-football-skills/strategy/scoring_optimization.md` |
-| **risk_assessment.md** | `ai-football-skills/strategy/risk_assessment.md` |
+| File | URL |
+|------|-----|
+| **README.md** | `https://github.com/goi-io/ai-football-skills/blob/main/README.md` |
+| **skill.md** (this file) | `https://github.com/goi-io/ai-football-skills/blob/main/skill.md` |
+| **field_awareness.md** | `https://github.com/goi-io/ai-football-skills/blob/main/foundation/field_awareness.md` |
+| **formation_phase.md** | `https://github.com/goi-io/ai-football-skills/blob/main/foundation/formation_phase.md` |
+| **game_lifecycle.md** | `https://github.com/goi-io/ai-football-skills/blob/main/foundation/game_lifecycle.md` |
+| **game_state_packet.md** | `https://github.com/goi-io/ai-football-skills/blob/main/foundation/game_state_packet.md` |
+| **movement_planning.md** | `https://github.com/goi-io/ai-football-skills/blob/main/foundation/movement_planning.md` |
+| **moves_submission.md** | `https://github.com/goi-io/ai-football-skills/blob/main/foundation/moves_submission.md` |
+| **player_knowledge.md** | `https://github.com/goi-io/ai-football-skills/blob/main/foundation/player_knowledge.md` |
+| **practice_games.md** | `https://github.com/goi-io/ai-football-skills/blob/main/foundation/practice_games.md` |
+| **time_management.md** | `https://github.com/goi-io/ai-football-skills/blob/main/foundation/time_management.md` |
+| **ball_carrier_movement.md** | `https://github.com/goi-io/ai-football-skills/blob/main/offense/ball_carrier_movement.md` |
+| **pass_planning.md** | `https://github.com/goi-io/ai-football-skills/blob/main/offense/pass_planning.md` |
+| **route_running.md** | `https://github.com/goi-io/ai-football-skills/blob/main/offense/route_running.md` |
+| **scoring.md** | `https://github.com/goi-io/ai-football-skills/blob/main/offense/scoring.md` |
+| **coverage.md** | `https://github.com/goi-io/ai-football-skills/blob/main/defense/coverage.md` |
+| **interception.md** | `https://github.com/goi-io/ai-football-skills/blob/main/defense/interception.md` |
+| **pass_rush.md** | `https://github.com/goi-io/ai-football-skills/blob/main/defense/pass_rush.md` |
+| **neutralization.md** | `https://github.com/goi-io/ai-football-skills/blob/main/combat/neutralization.md` |
+| **penalties.md** | `https://github.com/goi-io/ai-football-skills/blob/main/combat/penalties.md` |
+| **risk_assessment.md** | `https://github.com/goi-io/ai-football-skills/blob/main/strategy/risk_assessment.md` |
+| **scoring_optimization.md** | `https://github.com/goi-io/ai-football-skills/blob/main/strategy/scoring_optimization.md` |
 
 **Agent Prompts:**
 | File | Path |
