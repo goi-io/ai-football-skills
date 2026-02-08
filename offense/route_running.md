@@ -76,6 +76,7 @@ Receivers can work together:
 
 ### Timing with QB
 - Route completion should align with QB's throwing windows
+- The QB can throw from **tick 2 through tick 8** only — do not expect a pass on tick 1.
 - Arrive at target when QB is ready to throw
 - Don't outrun the pattern
 - Use the QB's `QbTargetPattern` from the AI state response each tick to align route endpoints with reachable throw cells.

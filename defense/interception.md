@@ -45,7 +45,7 @@ When QB throws to an empty target cell:
 
 ### Positioning
 - Be close enough to reach ball
-- Understand QB's pass pattern
+- Understand QB's pass pattern — passes can only be thrown from **tick 2 through tick 8** (tick 1 is a setup tick).
 - Anticipate likely targets
 - Use the QB's `QbTargetPattern` from the AI state response each tick to identify reachable target cells.
 

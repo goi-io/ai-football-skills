@@ -77,7 +77,7 @@ When carrier has strength advantage:
 
 ### Scramble (QB)
 - Weigh running gain vs. passing options
-- Keep passing available if receivers are open
+- Keep passing available if receivers are open — the QB can throw from **tick 2 through tick 8** only.
 - Protect the ball above all
 - If considering a scramble-and-throw, use the QB's `QbTargetPattern` from the AI state response each tick to evaluate reachable pass targets after the move.
 

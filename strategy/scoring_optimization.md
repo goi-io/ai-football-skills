@@ -43,6 +43,7 @@ Exact hotspot locations and values are provided in game state.
 - Deep passes: Higher potential, higher risk
 - Short passes: Lower potential, safer
 - Consider time remaining and score situation
+- The QB can throw from **tick 2 through tick 8** only — factor this window into pass play value calculations.
 - Use the QB's `QbTargetPattern` from the AI state response each tick to identify reachable throw cells when weighing pass value.
 
 ### Hotspot Targeting

@@ -52,7 +52,7 @@ Combination approach:
 
 ### Reading and Reacting
 - Watch for route breaks
-- Anticipate throws
+- Anticipate throws — the QB can throw from **tick 2 through tick 8** only (tick 1 is a setup tick).
 - Break on the ball when thrown
 - Use the QB's `QbTargetPattern` from the AI state response each tick to anticipate likely throw windows.
 

@@ -18,6 +18,7 @@ Evaluate play options considering probability of success and failure consequence
 - **Neutralization:** Ball carrier tackled
 - **Turnover position:** Losing ball in bad location
 - **Time loss:** Wasted ticks on failed plays
+- The QB can throw from **tick 2 through tick 8** only — passing on tick 1 is not allowed.
 - Factor in the QB's `QbTargetPattern` from the AI state response each tick when evaluating pass risk.
 
 ### Defensive Risks

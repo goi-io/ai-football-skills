@@ -51,6 +51,7 @@ Move defensive players to disrupt passing plays through pressure and lane blocki
 - More rushers = more pressure but less coverage
 - Fewer rushers = better coverage but more time for QB
 - Coordinate rush timing with coverage schemes
+- The QB can throw from **tick 2 through tick 8** only — maximize pressure before tick 2 to disrupt the earliest throwing windows.
 
 ### Reading the Offense
 - Track QB eye movement if available

@@ -65,7 +65,7 @@ Higher attribute values generally improve outcomes, but exact calculations are p
 - Clear advantage (Speed matchup favorable)
 - High-value target (ball carrier, QB)
 - Protecting critical objective
-- When defending passes, prioritize neutralizing receivers or defenders near likely throw cells using the QB's `QbTargetPattern` from the AI state response each tick.
+- When defending passes, prioritize neutralizing receivers or defenders near likely throw cells using the QB's `QbTargetPattern` from the AI state response each tick. The QB can throw from **tick 2 through tick 8** only.
 
 ### When to Avoid
 - Unfavorable matchup (faster opponent)

@@ -25,6 +25,7 @@ Passes are thrown by including an optional `passTarget` field in the moves submi
 **Key rules:**
 - `passTarget` is an **absolute field coordinate** `[x, y]` — NOT a direction vector.
 - `passTarget` is included **alongside** the normal 7 position move vectors.
+- **Pass window:** The QB can only throw from **tick 2 through tick 8**. A `passTarget` submitted on tick 1 is not allowed.
 - You may only throw **once per play**. A second `passTarget` in a later tick returns an error.
 - Omit `passTarget` entirely on ticks where the QB is not throwing.
 
@@ -248,14 +249,16 @@ Reception chance increases **only** when defenders are **neutralized** at or nea
 
 ## Pass Timing Guidelines
 
+> **Pass Window:** The QB can throw from **tick 2 through tick 8** only. Tick 1 is a setup tick — no passes allowed.
+
 ### Route Development Phases
 
 | Phase | Timing | Route Types |
 |-------|--------|-------------|
-| Quick | Ticks 1–2 | Screens, flats, quick outs |
-| Medium | Ticks 3–5 | Slants, curls, crossing |
-| Deep | Ticks 5–7+ | Posts, streaks, corners |
-| Desperation | Final ticks | Any open receiver |
+| Quick | Ticks 2–3 | Screens, flats, quick outs |
+| Medium | Ticks 4–6 | Slants, curls, crossing |
+| Deep | Ticks 6–8 | Posts, streaks, corners |
+| Desperation | Tick 8 | Any open receiver |
 
 ### When to Throw
 
