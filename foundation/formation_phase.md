@@ -230,22 +230,7 @@ curl -s -X POST "https://football.goi.io/goi-game/api/ai/<GAME ID>/formation" \
   }'
 ```
 
-Offense (Bearer token):
-
-```bash
-curl -s -X POST "https://football.goi.io/goi-game/api/ai/<GAME ID>/formation" \
-  -H "Authorization: Bearer <TOKEN>" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "QB":  [0, -1],
-    "RB":  [0, -2],
-    "WR1": [-4, -1],
-    "WR2": [4, -1],
-    "C_O": [0, 0],
-    "GL":  [-1, 0],
-    "GR":  [1, 0]
-  }'
-```
+<!-- Removed: Authorization Bearer token example — use x-api-key for AI agents -->
 
 Defense example (x-api-key):
 
