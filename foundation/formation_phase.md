@@ -5,35 +5,25 @@
 > Patent Pending: US Application 63/970524  
 > This documentation provides strategic guidance only. Game engine mechanics are proprietary.  
 > © 2024-2026 GOI.IO LLC. All rights reserved.
-
 ---
 
 ## Purpose
 
-Understand the formation phase where players are positioned on the field before play execution begins. Formations determine starting positions and are critical to play strategy.
-
 ---
-
-## Formation Phase Overview
 
 **When:** Before each play begins.
 
 **What:** Each team positions all 7 players within designated zones on the field.
-
 **Why:** Starting positions determine route options, coverage matchups, and overall play strategy.
 
 ### ⚠️ Critical: Turn Order
-
 **Offense ALWAYS submits formation FIRST, then Defense.**
 
 | Your Side | Turn Order |
-|-----------|------------|
 | Offense | Submit immediately when `myTurn: true` |
 | Defense | Wait until offense submits, then `myTurn` becomes `true` |
 
-The `myTurn` field in the game state indicates when you can submit:
 - `myTurn: true` + `TurnType: Formation` = Submit your formation now
-- `myTurn: false` = Wait and poll `/state` until it changes
 
 ⚠️ **Submitting out of turn will fail!**
 
@@ -41,9 +31,6 @@ The `myTurn` field in the game state indicates when you can submit:
 
 ## Key Concepts
 
-### Turn Type
-- `TurnType.Formation` indicates the formation submission phase
-- Both offense and defense submit formations before play execution begins
 - After formations are locked, the game transitions to `TurnType.Tick`
 
 ### Timing
@@ -60,13 +47,9 @@ The `myTurn` field in the game state indicates when you can submit:
 
 ## Offensive Formation Zones
 
-All 7 offensive players must be positioned within their designated zones:
-
 ### QB (Quarterback)
 **Allowed positions:** `(0, -1)` or `(0, -2)`
-- Behind center, primary ball handler
 
-### RB (Running Back)
 **Allowed positions (8 total):**
 - Backfield: `(-1, -2)`, `(0, -2)`, `(1, -2)`, `(-1, -3)`, `(0, -3)`, `(1, -3)`
 - Wing: `(-2, -1)`, `(2, -1)`
@@ -84,29 +67,15 @@ All 7 offensive players must be positioned within their designated zones:
 **Allowed position:** `(0, 0)` only
 - Must be at line of scrimmage center
 
-### GL (Guard Left)
 **Allowed positions:** `(-1, -1)` or `(-1, 0)`
 - **Blocking Rule:** Cannot be at `(-1, -1)` if ANY player is at `(-2, -1)`
 
 ### GR (Guard Right)
-**Allowed positions:** `(1, -1)` or `(1, 0)`
-- **Blocking Rule:** Cannot be at `(1, -1)` if ANY player is at `(2, -1)`
-
----
 
 ## Defensive Formation Zones
-
-All 7 defensive players must be positioned within their designated zones:
-
-### S (Safety)
-**Allowed positions (8 total):**
 - Deep center: `(0, 4)`
 - Secondary: `(-2, 3)`, `(-1, 3)`, `(0, 3)`, `(1, 3)`, `(2, 3)`
-- Wide secondary: `(-3, 2)`, `(3, 2)`
-
-### LB (Linebacker)
 **Allowed positions (5 total):** `(-2, 2)`, `(-1, 2)`, `(0, 2)`, `(1, 2)`, `(2, 2)`
-
 ### TL (Tackle Left)
 **Allowed positions:** `(-2, 1)` or `(-1, 1)`
 
@@ -150,12 +119,7 @@ All 7 defensive players must be positioned within their designated zones:
 ### Offensive Formation Strategy
 - **Spread formations:** Position WRs wide to stretch defense horizontally
 - **Tight formations:** Group receivers closer for shorter routes and blocking
-- **RB positioning:** Wing positions (`±2, -1`) create misdirection options
-- **Guard alignment:** Consider blocking rules when positioning WRs at `(±2, -1)`
-
-### Defensive Formation Strategy
 - **Single-high safety:** S at `(0, 4)` for deep middle coverage
-- **Two-high safety:** S at `(-2, 3)` or similar with CB providing help
 - **Press coverage:** CBs at Y=1 positions for tight receiver coverage
 - **Off coverage:** CBs at Y=2 positions for cushion against deep routes
 - **LB positioning:** Align LB based on anticipated run/pass tendencies
@@ -168,29 +132,15 @@ All 7 defensive players must be positioned within their designated zones:
 ---
 
 ## Formation Submission (AI API)
-
 Use the simplified AI API endpoint. All game state (Set, Play, Tick, SideOfBall) is auto-detected.
 
 **Endpoint:** `POST /api/ai/{gameId}/formation`
 
-**Offense Formation Example:**
-```json
-{
-  "QB": [0, -2],
-  "RB": [0, -3],
-  "WR1": [-3, 0],
   "WR2": [3, 0],
   "C_O": [0, 0],
-  "GL": [-1, 0],
-  "GR": [1, 0]
-}
-```
-
-**Defense Example:**
 ```json
 {
   "S": [0, 3],
-  "LB": [0, 2],
   "TL": [-1, 1],
   "TR": [1, 1],
   "C_D": [0, 1],
