@@ -69,8 +69,7 @@ The engine performs a multi-source neutralisation check:
 
 If **any** of these indicate the ball carrier is down at a hotspot, the play ends as `EndOfPlayReasonTypes.Tackle` (not `HotSpotReached`) and scores **0**.
 
-### Why This Happens
-The engine pipeline processes stages in this order:
+
 
 ```
 penalty → movement → tackle → targeting → passReception → hasHotSpotBeenReached → scoring
