@@ -14,12 +14,14 @@ agents/
 │   │   ├── field_awareness.md        # Grid, territories, hotspots
 │   │   ├── player_knowledge.md       # Positions, roles, attributes
 │   │   ├── movement_planning.md      # Valid moves, pathfinding
-│   │   └── time_management.md        # Tick timing, play phases
+│   │   ├── time_management.md        # Tick timing, play phases
+│   │   └── game_lifecycle.md         # Turn polling, game loop, never quit
 │   │
 │   ├── offense/                      # Offensive-specific skills
 │   │   ├── pass_planning.md          # QB targeting, throw timing
 │   │   ├── route_running.md          # Receiver routes, separation
-│   │   └── ball_carrier_movement.md  # Running, evasion, YAC
+│   │   ├── ball_carrier_movement.md  # Running, evasion, YAC
+│   │   └── scoring.md                # Hotspot pursuit, DENIED!! risk, point values
 │   │
 │   ├── defense/                      # Defensive-specific skills
 │   │   ├── pass_rush.md              # Pressure, lane blocking
@@ -27,7 +29,8 @@ agents/
 │   │   └── interception.md           # Ball-hawking, route jumping
 │   │
 │   ├── combat/                       # Player-vs-player interactions
-│   │   └── neutralization.md         # Blocking, tackling, evasion
+│   │   ├── neutralization.md         # Blocking, tackling, evasion
+│   │   └── penalties.md              # Stacking, squatting, out-of-bounds
 │   │
 │   └── strategy/                     # High-level decision making
 │       ├── scoring_optimization.md   # Maximizing points

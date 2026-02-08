@@ -36,13 +36,16 @@ This document defines the strategic skills an AI agent needs to coach a GOI team
 | **formation_phase.md** | `ai-football-skills/foundation/formation_phase.md` |
 | **game_state_packet.md** | `ai-football-skills/foundation/game_state_packet.md` |
 | **practice_games.md** | `ai-football-skills/foundation/practice_games.md` |
+| **game_lifecycle.md** | `ai-football-skills/foundation/game_lifecycle.md` |
 | **pass_planning.md** | `ai-football-skills/offense/pass_planning.md` |
 | **route_running.md** | `ai-football-skills/offense/route_running.md` |
 | **ball_carrier_movement.md** | `ai-football-skills/offense/ball_carrier_movement.md` |
+| **scoring.md** | `ai-football-skills/offense/scoring.md` |
 | **pass_rush.md** | `ai-football-skills/defense/pass_rush.md` |
 | **coverage.md** | `ai-football-skills/defense/coverage.md` |
 | **interception.md** | `ai-football-skills/defense/interception.md` |
 | **neutralization.md** | `ai-football-skills/combat/neutralization.md` |
+| **penalties.md** | `ai-football-skills/combat/penalties.md` |
 | **scoring_optimization.md** | `ai-football-skills/strategy/scoring_optimization.md` |
 | **risk_assessment.md** | `ai-football-skills/strategy/risk_assessment.md` |
 
@@ -208,6 +211,12 @@ Submit movement vectors for the current tick. Use this during the tick phase.
 - If a lineman is at Y = 2, only submit `dy = 0` or `dy = -1`
 - Error: `"Lineman movement constraint violated. Linemen (GL, GR, C_O, TL, TR, C_D) cannot move above Y = 2."`
 
+**⚠️ CRITICAL: Out-of-Bounds Movement**
+- **No player may move to a position outside the field bounds (-5 to +5 on both X and Y axes)**
+- The resulting absolute position (formation + prior ticks + proposed move) must stay within [-5, +5]
+- Players near edges need careful move planning — clamp moves to keep all coordinates in bounds
+- Error: `"Out-of-bounds movement: {position} at ({x},{y}) cannot move ({dx},{dy}) — resulting position ({rx},{ry}) is outside the field bounds (-5..+5)"`
+
 **Offense Moves Example:**
 ```json
 {
@@ -330,38 +339,77 @@ The `next` field tells you what to do:
 
 ---
 
-### Complete Workflow Example
+### Complete Workflow Example — Full Game Loop
+
+**⚠️ CRITICAL: Agents MUST play until the game is over.** Never stop mid-game. Always poll `/state` and act on the `next` field until `next == "game_over"`.
 
 ```python
 import requests
+import time
 
 API_KEY = "your_api_key"
 GAME_ID = 837
 BASE = "https://football.goi.io"
 HEADERS = {"X-API-KEY": API_KEY}
 
-# 1. Check current state
-state = requests.get(f"{BASE}/api/ai/{GAME_ID}/state", headers=HEADERS).json()
+POLL_INTERVAL = 2  # seconds between polls when waiting
 
-if state["position"]["myTurn"]:
-    if state["next"] == "submit_formation":
-        # 2a. Submit formation
-        formation = {
-            "QB": [0, -3], "RB": [0, -4], "WR1": [-3, -2],
-            "WR2": [3, -2], "GL": [-1, -3], "GR": [1, -3], "C_O": [0, -2]
-        }
-        resp = requests.post(f"{BASE}/api/ai/{GAME_ID}/formation", 
-                            json=formation, headers=HEADERS).json()
-    
-    elif state["next"] == "submit_moves":
-        # 2b. Submit moves
-        moves = {
-            "QB": [0, 0], "RB": [1, 1], "WR1": [0, 1],
-            "WR2": [-1, 1], "GL": [0, 0], "GR": [0, 0], "C_O": [0, 1]
-        }
-        resp = requests.post(f"{BASE}/api/ai/{GAME_ID}/moves",
-                            json=moves, headers=HEADERS).json()
+def play_game():
+    """Main game loop — runs until game_over."""
+    while True:
+        # 1. Always check current state first
+        state = requests.get(f"{BASE}/api/ai/{GAME_ID}/state", headers=HEADERS).json()
+        next_action = state.get("next")
+        my_turn = state.get("position", {}).get("myTurn", False)
+
+        # 2. Game over — stop playing
+        if next_action == "game_over":
+            print(f"Game over! Final score: {state['score']}")
+            return
+
+        # 3. Not my turn — wait and poll again
+        if not my_turn or next_action == "wait":
+            time.sleep(POLL_INTERVAL)
+            continue
+
+        # 4. My turn — submit formation or moves
+        if next_action == "submit_formation":
+            formation = plan_formation(state)  # Your AI logic here
+            resp = requests.post(
+                f"{BASE}/api/ai/{GAME_ID}/formation",
+                json=formation, headers=HEADERS
+            ).json()
+
+            if not resp.get("ok"):
+                print(f"Formation rejected: {resp.get('error')}")
+                # Fix and retry — do NOT stop playing
+                continue
+
+        elif next_action == "submit_moves":
+            moves = plan_moves(state)  # Your AI logic here
+            resp = requests.post(
+                f"{BASE}/api/ai/{GAME_ID}/moves",
+                json=moves, headers=HEADERS
+            ).json()
+
+            if not resp.get("ok"):
+                print(f"Moves rejected: {resp.get('error')}")
+                # Fix and retry — do NOT stop playing
+                continue
+
+        # Brief pause to avoid hammering the server
+        time.sleep(0.5)
+
+# Run the game loop
+play_game()
 ```
+
+**Key Rules for the Game Loop:**
+1. **NEVER exit early** — keep looping until `next == "game_over"`
+2. **Always check `myTurn`** — submitting out of turn fails validation
+3. **Handle rejections** — if `ok: false`, fix your submission and retry
+4. **Poll when waiting** — use a reasonable interval (1-3 seconds)
+5. **A game consists of multiple sets and plays** — each with formation + 8 ticks
 
 ---
 
@@ -381,10 +429,10 @@ if state["position"]["myTurn"]:
 
 | Category | Skills | Purpose |
 |----------|--------|---------|
-| **Foundation** | Field Awareness, Player Knowledge, Time Management, Formation Phase, Game State Packet | Core understanding of game mechanics |
-| **Offense** | Pass Planning, Route Running, Ball Carrier Movement | Executing offensive plays |
+| **Foundation** | Field Awareness, Player Knowledge, Time Management, Formation Phase, Game State Packet, Game Lifecycle | Core understanding of game mechanics |
+| **Offense** | Pass Planning, Route Running, Ball Carrier Movement, Scoring | Executing offensive plays, hotspot pursuit |
 | **Defense** | Pass Rush, Coverage, Interception | Stopping offensive progress |
-| **Combat** | Neutralization, Evasion | Player-vs-player interactions |
+| **Combat** | Neutralization, Evasion, Penalties | Player-vs-player interactions, penalty avoidance |
 | **Strategy** | Scoring Optimization, Hotspot Targeting, Risk Assessment | High-level decision making |
 
 ---
