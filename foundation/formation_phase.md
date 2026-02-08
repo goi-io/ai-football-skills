@@ -211,6 +211,61 @@ Use the simplified AI API endpoint. All game state (Set, Play, Tick, SideOfBall)
 }
 ```
 
+### Full curl examples (formation)
+
+Offense (x-api-key):
+
+```bash
+curl -s -X POST "https://football.goi.io/goi-game/api/ai/<GAME ID>/formation" \
+  -H "x-api-key: <API KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "QB":  [0, -1],
+    "RB":  [0, -2],
+    "WR1": [-4, -1],
+    "WR2": [4, -1],
+    "C_O": [0, 0],
+    "GL":  [-1, 0],
+    "GR":  [1, 0]
+  }'
+```
+
+Offense (Bearer token):
+
+```bash
+curl -s -X POST "https://football.goi.io/goi-game/api/ai/<GAME ID>/formation" \
+  -H "Authorization: Bearer <TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "QB":  [0, -1],
+    "RB":  [0, -2],
+    "WR1": [-4, -1],
+    "WR2": [4, -1],
+    "C_O": [0, 0],
+    "GL":  [-1, 0],
+    "GR":  [1, 0]
+  }'
+```
+
+Defense example (x-api-key):
+
+```bash
+curl -s -X POST "https://football.goi.io/goi-game/api/ai/<GAME ID>/formation" \
+  -H "x-api-key: <API KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "S":  [0, 4],
+    "LB": [0, 2],
+    "TL": [-2, 1],
+    "TR": [2, 1],
+    "C_D": [0, 1],
+    "CB1": [-3, 1],
+    "CB2": [3, 1]
+  }'
+```
+
+Note: do not include extra top-level fields (`formationName`, `players`, etc.). The AI endpoint expects only position → `[x,y]` integer arrays.
+
 **Defense Example:**
 ```json
 {
@@ -272,3 +327,59 @@ Ensure formations obey these zones; validate locally before submission.
 4. **Handle shared zones** - WR1/WR2 and CB1/CB2 share zones but need different cells
 5. **Apply conditional blocking** - check GL/GR rules when using wing positions
 6. **Submit on time** - respect the formation deadline
+
+---
+
+## Move Submission (AI API)
+
+Use `POST /api/ai/{gameId}/moves` with a flat position → `[dx, dy]` mapping. Direction vectors must be -1, 0, or 1.
+
+Full curl example (moves):
+
+```bash
+curl -s -X POST "https://football.goi.io/goi-game/api/ai/<GAME ID>/moves" \
+  -H "x-api-key: <API KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "QB": [0, 0],
+    "RB": [0, 1],
+    "WR1": [0, 1],
+    "WR2": [0, 1],
+    "C_O": [0, 1],
+    "GL": [0, 1],
+    "GR": [0, 1]
+  }'
+```
+
+Including a pass target (QB throwing):
+
+```bash
+curl -s -X POST "https://football.goi.io/goi-game/api/ai/<GAME ID>/moves" \
+  -H "x-api-key: <API KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "QB": [0, 0],
+    "RB": [0, 1],
+    "WR1": [0, 1],
+    "WR2": [0, 1],
+    "C_O": [0, 1],
+    "GL": [0, 1],
+    "GR": [0, 1],
+    "passTarget": [3, 5]
+  }'
+```
+
+Rules & constraints for moves:
+- Each player vector must be `[-1,0,1]` per axis.
+- Linemen (GL, GR, C_O, TL, TR, C_D) cannot move above `Y = 2` — the server enforces the resulting absolute Y position constraint.
+- Only include `passTarget` when QB is throwing. The server will return an error "Pass already thrown" if the play already has a thrown pass.
+
+Common mistakes (moves):
+- Sending non-array values (strings/objects) for vectors will fail parsing.
+- Including extra fields at top-level will be parsed as `int[]` and will fail if not an array of two ints.
+
+---
+
+## Is `formationName=Spread` required?
+
+No. The AI endpoint does not require a `formationName` query parameter. Do not add `formationName` as a top-level JSON property — the AI converter expects every top-level value to be an `int[]` coordinate. If you need to record a named formation, do that outside the AI endpoint (e.g., in your application metadata) or use the full game endpoints that accept `SubmitFormationActiveGameModel` (not recommended for automated AI agents).
