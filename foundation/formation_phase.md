@@ -230,8 +230,6 @@ curl -s -X POST "https://football.goi.io/goi-game/api/ai/<GAME ID>/formation" \
   }'
 ```
 
-<!-- Removed: Authorization Bearer token example — use x-api-key for AI agents -->
-
 Defense example (x-api-key):
 
 ```bash
