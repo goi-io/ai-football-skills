@@ -45,14 +45,16 @@ Content-Type: application/json
 ```json
 {
   "QB": [0, -1],
-  "RB": [0, -2],
-  "WR1": [-4, -1],
-  "WR2": [4, -1],
+  "RB": [0, 1],
+  "WR1": [-1, 1],
+  "WR2": [1, 1],
   "GL": [-1, 0],
   "GR": [1, 0],
   "C_O": [0, 0]
 }
 ```
+
+> **⚠️ Each vector component must be -1, 0, or 1.** Values like `[0, -2]` or `[-4, -1]` will be rejected.
 
 Important: include ALL 7 position codes (offense or defense set depending on your `side`). Missing or extra top-level keys may cause validation errors.
 
@@ -86,7 +88,10 @@ The server validates move vectors and optional `passTarget` semantics.
 
 Notes:
 - Linemen constraint: resulting absolute Y position for linemen (GL, GR, C_O, TL, TR, C_D) must be `<= 2` — server enforces this.
-- `passTarget` must be absolute field coordinates and present only when QB is throwing. The server will return `Pass already thrown` if a pass has already occurred in the play.
+- `passTarget` must be **absolute field coordinates** `[x, y]` (NOT a direction vector) and present only when QB is throwing.
+- You may only throw **once per play**. Including `passTarget` a second time returns `PassAlreadyThrown`.
+- Eligible pass receiver positions: **WR1**, **WR2**, **RB**. Target a cell one of them occupies (Direct Pass) or will reach (Live Pass).
+- See [offense/pass_planning.md](../offense/pass_planning.md) for full pass strategy and timing guidance.
 
 ---
 

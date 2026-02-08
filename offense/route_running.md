@@ -85,6 +85,13 @@ Receivers can work together:
 	- **Live ball targets** (empty cell throws)
 	- **Direct pass targets** (receiver on target)
 
+### Pass Targeting Integration
+- The QB throws by including `"passTarget": [x, y]` (absolute field coordinates) in the moves JSON body.
+- Route completion should place the receiver **at or adjacent to** the `passTarget` cell when the ball arrives.
+- Only **WR1**, **WR2**, and **RB** are eligible pass receiver positions.
+- A pass can only be thrown **once per play** — coordinate route timing with the QB's throw tick.
+- See [offense/pass_planning.md](pass_planning.md) for full pass mechanics and API details.
+
 ### Safety Awareness
 - Deep routes risk interception from safety help
 - Understand when safeties shade toward your route
