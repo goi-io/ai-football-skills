@@ -113,9 +113,123 @@ The `passTarget` coordinate should be the cell where one of these receivers will
 
 ### QB Pass-Target Pattern
 - QB has a defined pattern of cells where passes can be thrown.
-- Pattern position is relative to QB's current location.
-- As QB moves, the absolute target positions shift accordingly.
-- Agents receive pattern information in game state.
+- The pattern is derived from the QB's player attributes.
+- Pattern position is **relative to QB's current location** — it defines offsets, not absolute cells.
+- As QB moves, the absolute target positions **shift with the QB**. The engine recalculates: `absolute_target = base_pattern_offset + qb_current_position`.
+- Agents receive the computed absolute target points in the game state (via the QB's `QbTargetPattern` in the AI state endpoint).
+- `passTarget` submitted in the moves request must be one of these absolute target points (or very near one).
+
+---
+
+## Move-and-Pass: Throwing While the QB Moves (Critical)
+
+The QB can **move and pass in the same tick** by submitting both a non-zero QB move vector and a `passTarget` in the same request. However, because the target pattern moves with the QB, the agent **must recalculate targets based on where the QB will be after the move** — not where the QB currently is.
+
+### How It Works
+
+1. The QB's base target pattern is a fixed set of **relative offsets** derived from the QB's attributes (e.g., `[(0,2), (1,2), (-1,2), (0,3), ...]`).
+2. These offsets are anchored to the QB's position. When the game engine processes a tick, it applies the QB's move first, then evaluates the pass from the **new** position.
+3. Therefore: `valid_targets = [offset + new_qb_position for offset in base_pattern]`
+
+### Recalculation Formula
+
+```
+new_qb_position = current_qb_position + qb_move_vector
+valid_targets   = [base_offset + new_qb_position  for base_offset in qb_base_pattern]
+```
+
+Where:
+- `current_qb_position` — QB's absolute `[x, y]` from the game state at the start of this tick.
+- `qb_move_vector` — the `[dx, dy]` direction vector you are submitting for QB (e.g., `[1, 0]`).
+- `qb_base_pattern` — the set of relative offsets provided via `QbTargetPattern` in the AI state. These are **constant for a given QB** throughout the game.
+- `valid_targets` — the absolute field coordinates the QB can throw to **after** moving.
+
+### Example: QB Moves Right and Throws
+
+**Setup:** QB is at `(0, -2)`. Base pattern includes offsets `(0,2), (1,2), (-1,2), (0,3)`.
+
+**Case A — QB stays still `[0, 0]`:**
+```
+new_qb_position = (0, -2) + (0, 0) = (0, -2)
+valid_targets   = [(0,0), (1,0), (-1,0), (0,1)]
+```
+
+**Case B — QB moves right `[1, 0]`:**
+```
+new_qb_position = (0, -2) + (1, 0) = (1, -2)
+valid_targets   = [(1,0), (2,0), (0,0), (1,1)]
+```
+
+Notice the entire target pattern shifted right by 1. If WR1 is at `(2, 0)`, the `passTarget` must be `[2, 0]` — a target that is only valid when the QB moves right this tick.
+
+### Request Body Example (Move + Pass)
+
+```json
+{
+  "QB": [1, 0],
+  "RB": [0, 1],
+  "WR1": [0, 1],
+  "WR2": [0, 1],
+  "GL": [0, 1],
+  "GR": [0, 1],
+  "C_O": [0, 0],
+  "passTarget": [2, 0]
+}
+```
+
+Here the QB moves `[1, 0]` (east) and throws to `[2, 0]`. The `passTarget` aligns with the **shifted** target pattern, not the pattern at the QB's pre-move position.
+
+### Step-by-Step Agent Algorithm
+
+```python
+def plan_qb_move_and_pass(state, qb_base_pattern):
+    """
+    Decide QB's move vector and, if throwing, compute valid passTarget
+    from the POST-MOVE position.
+    """
+    qb_pos = get_player_position(state, "QB")  # e.g., [0, -2]
+    
+    # 1. Decide the best move for QB (scramble, pocket step, hold)
+    qb_move = decide_qb_move(state)  # e.g., [1, 0]
+    
+    # 2. Calculate new QB position after this move
+    new_qb_pos = [qb_pos[0] + qb_move[0], qb_pos[1] + qb_move[1]]
+    
+    # 3. Recalculate absolute targets from the NEW position
+    valid_targets = [
+        [offset[0] + new_qb_pos[0], offset[1] + new_qb_pos[1]]
+        for offset in qb_base_pattern
+    ]
+    
+    # 4. Find the best target (closest to an open receiver)
+    receivers = get_receiver_positions(state)  # WR1, WR2, RB
+    best_target = select_best_target(valid_targets, receivers, state)
+    
+    # 5. Build the moves dict
+    moves = {"QB": qb_move, ...other_positions...}
+    if best_target and should_throw(state):
+        moves["passTarget"] = best_target  # Absolute [x, y]
+    
+    return moves
+```
+
+### Common Mistakes (Move + Pass)
+
+| Mistake | Result | Solution |
+|---------|--------|----------|
+| Using targets from the **pre-move** QB position | `passTarget` is outside the shifted pattern — pass may miss or be invalid | Always recalculate targets from `current_pos + move_vector` |
+| Assuming the target pattern is absolute | Targets are wrong after any QB movement | Treat pattern as **relative offsets**; anchor to QB's new position each tick |
+| Not accounting for QB movement when planning receiver routes | Receiver runs to a cell the QB can no longer reach | Plan receiver routes relative to the QB's projected position |
+| Moving QB out of bounds then passing | Move rejected entirely | Validate `new_qb_pos` is within grid bounds (`-5 ≤ x ≤ 5`, `-5 ≤ y ≤ 5`) before planning pass |
+
+### Strategic Uses of Move-and-Pass
+
+- **Scramble throw:** QB steps away from pressure (`[-1, 0]`) and throws from a new angle, opening lanes that were blocked from the original position.
+- **Roll-out pass:** QB moves laterally (`[1, 0]` or `[-1, 0]`) to shift the entire target window toward one side of the field where a receiver has separation.
+- **Step-up throw:** QB moves forward (`[0, 1]`) to shorten the distance to a receiver, bringing shorter targets into range that were previously too far.
+- **Escape and throw:** When defenders converge on the pocket, the QB moves diagonally (`[1, 1]`) and throws to a target that is now reachable from the new position.
+
+> **Key Principle:** The `passTarget` coordinate must always be valid for where the QB **will be**, not where the QB **is**. Think of it as: "move first, then throw from the destination."
 
 ---
 
