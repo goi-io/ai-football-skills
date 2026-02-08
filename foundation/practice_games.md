@@ -258,6 +258,13 @@ while True:
 - Check each position against allowed coordinates in [formation_phase.md](formation_phase.md)
 - Common mistake: Using coordinates outside position-specific zones
 
+### Error: "Lineman movement constraint violated"
+- A lineman (GL, GR, C_O, TL, TR, C_D) was moved above Y = 2
+- **Linemen cannot advance beyond Y = 2** on the field
+- Check the lineman's current Y position in the game state before submitting northward moves
+- If a lineman is at Y = 2, only submit `dy = 0` or `dy = -1` for that player
+- Safe strategy: Submit `[0, 0]` for linemen when unsure of their position
+
 ### Error: "Game not found"
 - Invalid `gameId`
 - The practice game may have completed or been deleted

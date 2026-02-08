@@ -35,6 +35,32 @@ Players can move in cardinal and diagonal directions:
 - These players cannot advance beyond designated areas
 - Agents receive constraint violations from the game engine
 
+#### ⚠️ Lineman Movement Constraint (CRITICAL)
+
+**Linemen cannot move above Y = 2 on the field.**
+
+This applies to **all linemen** on both sides:
+- **Offensive linemen:** `GL` (Guard Left), `GR` (Guard Right), `C_O` (Center Offense)
+- **Defensive linemen:** `TL` (Tackle Left), `TR` (Tackle Right), `C_D` (Center Defense)
+
+The constraint is checked against the **resulting absolute Y position**:
+- `resulting_Y = formation_Y + sum(previous_tick_movements_Y) + submitted_move_Y`
+- If `resulting_Y > 2`, the move submission is **rejected**
+
+**Error Example:**
+```json
+{
+  "ok": false,
+  "error": "Lineman movement constraint violated. Linemen (GL, GR, C_O, TL, TR, C_D) cannot move above Y = 2."
+}
+```
+
+**Safe Strategy for Linemen:**
+- Track each lineman's current Y position from game state
+- Before submitting a move with `dy = 1` (north), verify `current_Y + 1 <= 2`
+- If a lineman is already at Y = 2, only submit `dy = 0` or `dy = -1`
+- When in doubt, submit `[0, 0]` for linemen — staying in place is always valid
+
 #### ⚠️ Neutralization Constraint (CRITICAL)
 
 **Neutralized players MUST submit `[0, 0]` movement.**

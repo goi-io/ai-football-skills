@@ -201,6 +201,13 @@ Submit movement vectors for the current tick. Use this during the tick phase.
 - Error: `"Neutralized players must have (0,0) movement. Invalid moves: WR1 (0,1)"`
 - **Safe strategy:** Submit `[0, 0]` for all players if you're unsure of neutralization state
 
+**⚠️ CRITICAL: Lineman Movement Constraint**
+- **Linemen (GL, GR, C_O, TL, TR, C_D) cannot move above Y = 2**
+- The resulting absolute Y position (current position + move vector) must be ≤ 2
+- Check the lineman's current Y from game state before moving north (dy = 1)
+- If a lineman is at Y = 2, only submit `dy = 0` or `dy = -1`
+- Error: `"Lineman movement constraint violated. Linemen (GL, GR, C_O, TL, TR, C_D) cannot move above Y = 2."`
+
 **Offense Moves Example:**
 ```json
 {
@@ -536,6 +543,7 @@ Attribute values influence game outcomes. Higher values generally improve perfor
 - Offensive players position relative to Line of Scrimmage (LoS)
 - Defensive players position in their territory
 - Linemen (GL, GR, C_O, TL, TR, C_D) have strict zone boundaries
+- Linemen cannot move above Y = 2 during tick phase (movement constraint enforced by game engine)
 - Skill players have wider positioning freedom
 
 **Strategic Considerations:**
@@ -577,6 +585,12 @@ Attribute values influence game outcomes. Higher values generally improve perfor
 - Players can move to adjacent cells (8 directions) or stay in place
 - Movement is constrained by grid boundaries
 - Linemen have restricted movement zones
+
+**⚠️ Lineman Movement Constraint:**
+- Linemen (GL, GR, C_O, TL, TR, C_D) **cannot move above Y = 2**
+- The resulting absolute Y position must be ≤ 2
+- Check current Y position before submitting northward moves (dy = 1)
+- Violation results in `LinemanMovementConstraintViolation` error
 
 **Strategic Considerations:**
 - Calculate shortest paths to targets
@@ -641,7 +655,11 @@ Attribute values influence game outcomes. Higher values generally improve perfor
 ### SKILL: Pass Rush
 **Purpose:** Move defensive linemen to block passing lanes or pressure QB.
 
-**Applicable Positions:** C_D, TL, TR (movement restricted)
+**Applicable Positions:** C_D, TL, TR (movement restricted to Y ≤ 2)
+
+**⚠️ Movement Constraint:** These positions cannot move above Y = 2.
+- Track current Y position; if at Y = 2, only move laterally or backward
+- Violation will be rejected by the game engine
 
 **Tactics:**
 - **Lane Blocking:** Position in QB's throwing path before release
