@@ -12,21 +12,84 @@
 Execute and anticipate player-vs-player physical engagements that disable opponents temporarily.
 
 ## What is Neutralization?
-When players engage in physical contact, one can neutralize the other:
-- **Blocking:** Offensive players neutralize defenders
-- **Tackling:** Defensive players neutralize ball carriers
-- **Result:** Neutralized player cannot move for a duration
+Neutralization is a temporary disable applied when players collide or commit certain penalties.
+When neutralized, a player cannot move or interact for a set number of ticks.
+
+Neutralization happens in two ways:
+- **Collisions (movement stage):** Opposing players collide, one loses and is neutralized.
+- **Penalties (penalty stage):** Stacking/riding or hotspot squatting neutralize the offender.
+
+The engine stores neutralization in **both** the player tick vector and the player object to keep state consistent across the pipeline.
 
 ## Neutralization Factors
 
 ### Determining Outcomes
 The game engine determines neutralization outcomes based on:
-- **Speed:** Key attribute for engagement advantage and initial contact
-- **Football IQ:** Affects recovery speed
-- **Hands:** Affects recovery speed
-- **Position matchups:** Some roles have advantages
+- **Speed:** First collision tiebreaker
+- **Strength:** Second collision tiebreaker and primary duration driver
+- **Football IQ:** Third collision tiebreaker, also reduces duration when high
+- **Hands:** Fourth collision tiebreaker, also reduces duration when high
+- **Position matchups:** Linemen vs. pass-responsible roles influence base duration
 
 Higher attribute values generally improve outcomes, but exact calculations are proprietary.
+
+## Engine Mechanics (Movement Stage)
+
+### Neutralization Countdown
+Before resolving new collisions each tick, the engine updates neutralized players:
+- Decrements `NeutralizedDuration`
+- Resets their movement vector to `(0, 0)` while neutralized
+- Clears `NeutralizedBy` when the duration reaches 0
+
+### Collision Detection
+The engine compares offense vs. defense player locations:
+- **Collision** = same location
+- If **Influence** is enabled, collisions can also occur through influence overlap
+- Influence overlap is only considered from tick 3 onward
+
+### Collision Resolution Order
+If a collision occurs (excluding the ball carrier; see below), the winner is decided by:
+1. **Stationary beats moving**
+2. **Speed**
+3. **Strength**
+4. **FootballIQ**
+5. **Hands**
+6. **Tie goes to defense** (defense is rewarded for reading the play)
+
+The loser is neutralized for a duration computed by the neutralization formula.
+
+### Ball Carrier Exception
+The ball carrier is **excluded** from neutralization collision handling.
+If the ball carrier collides with a defender, the play proceeds to the **tackle** stage
+so the tackle can be recorded instead of a neutralization.
+
+## Neutralization Duration (Engine Logic)
+
+Duration is computed by `calculateNeutralizedTicksDuration` and results in **1-3 ticks**:
+
+1. **Base duration** is driven by position matchups and strength:
+	- Lineman vs. lineman, or lineman vs. non-lineman use **Strength** comparisons
+2. **Reduction for high recovery stats:**
+	- If the neutralized player's average of `FootballIQ` + `Hands` is >= 2.5, reduce by 1
+	- If the average is >= 3.5, reduce to **1 tick**
+
+### Holding-Style Neutralization
+If a player continues to occupy the same cell as a player they previously neutralized,
+the engine applies a **holding-style penalty neutralization** of **1 tick**
+(via `HOLDING_PENALITY_TICK_COUNT = 1`).
+
+This discourages camping on a neutralized opponent's space.
+
+## Penalty-Based Neutralization (Penalty Stage)
+
+Some neutralizations are penalties, not collisions:
+
+- **Stacking/Riding:** A teammate sharing the **ball carrier's cell** for 2+ consecutive ticks
+	(3+ ticks for QB at/below LOS overlapping RB/WR1/WR2) gets neutralized for **3 ticks**.
+- **Hotspot Squatting:** Any player staying on a hotspot for 2+ consecutive ticks
+	gets neutralized for **3 ticks**.
+
+These penalties **do not** deduct points; neutralization is the only consequence.
 
 ## Offensive Blocking
 
