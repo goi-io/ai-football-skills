@@ -31,6 +31,11 @@ When QB throws to an empty target cell:
 - **Hands attribute does NOT affect interception success**
 - Interception chance increases when **receivers are neutralized** at the live ball
 
+Engine notes for live ball:
+- Only **non-neutralized** players can contest
+- Eligible contesters are **any defense player** plus **WR1/WR2/RB**
+- The highest `avg` attributes win the contest at the ball location
+
 ### Anticipated Throws
 - Read QB's eyes/body language
 - Jump routes based on timing
@@ -40,6 +45,27 @@ When QB throws to an empty target cell:
 - Contact with ball at line creates opportunities
 - Alertness to deflected passes
 - Position to recover loose balls
+
+## Engine Interception Rules (Pass Reception Stage)
+
+### Ordinal Lane Intercepts
+If the QB throws along a direct ordinal line (N, NE, E, SE, S, SW, W, NW):
+- **D-Line in the lane** blocks the pass (nearest + strongest to the QB)
+- If no D-Line block, **pass defenders** in the lane intercept instead
+	(CB1, CB2, S, and LB are considered pass defenders here)
+
+### Target-Cell Priority (No Ordinal Block)
+When the ball reaches its target cell, the engine checks players **on that cell** in this order:
+1. **Offensive receivers** (WR1, WR2, RB) catch
+2. **Interceptors** (CB1, CB2, S) intercept
+3. **Blockers** (D-Line and LB) block
+4. **O-Line** has no effect
+
+This means an interceptor only wins if **no receiver is already on the target cell**.
+
+### Timing Outcomes
+- **Tick < 8:** Interception is **InterceptedActive** (play continues)
+- **Tick >= 8:** Interception is **InterceptedDead** (play ends)
 
 ## Interception Strategy
 

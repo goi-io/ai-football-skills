@@ -112,6 +112,31 @@ The `passTarget` coordinate should be the cell where one of these receivers will
 - Ball arrives at the cell and can be contested by nearby players.
 - Higher risk, but can create opportunities if receiver is en route.
 
+### Pass Reception Rules (Engine)
+
+**Ordinal lane rule (first check):**
+- If the throw is along a direct ordinal line (N, NE, E, SE, S, SW, W, NW),
+  defenders between the QB and target can resolve the pass before it reaches the target.
+- **D-Line** in the lane blocks (nearest + strongest to QB).
+- If no D-Line block, **pass defenders** in the lane intercept (CB1, CB2, S, LB).
+
+**Target-cell priority (if no ordinal block):**
+1. **Receivers** (WR1, WR2, RB) catch
+2. **Interceptors** (CB1, CB2, S) intercept
+3. **Blockers** (D-Line and LB) block
+4. **O-Line** has no effect
+
+**Eligibility filters at the target:**
+- QB is excluded (cannot receive their own pass).
+- Neutralized players cannot contest.
+- D-Line and O-Line are only eligible at the target when the ball's Y <= 1.0
+  (near the line of scrimmage).
+
+**Live ball continuation:**
+- If no one wins at the target cell, the ball becomes **LiveBall**.
+- LiveBall is contestable for **2 ticks** before expiring to **LiveBallExpired** (0 points).
+- During live ball, **any defense player** plus WR1/WR2/RB can win by highest `avg` attributes.
+
 ### QB Pass-Target Pattern
 - QB has a defined pattern of cells where passes can be thrown.
 - The pattern is derived from the QB's player attributes.
