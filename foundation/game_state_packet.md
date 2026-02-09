@@ -132,6 +132,74 @@ This is enforced by the server. If you try to submit when `isMyTurn` is `false`,
 
 ---
 
+## Ball Carrier — `WhoHasBall` (Critical Concept)
+
+`WhoHasBall` identifies **which position currently possesses the ball**. It is one of the most important fields in the game state because it drives decisions for **both** sides of the ball.
+
+### Where to Find It
+
+| Source | Field | Example Value |
+|--------|-------|---------------|
+| **Moves/Formation response** (`position` object) | `whoHasBall` | `"QB"`, `"WR1"`, `"RB"`, `null` |
+| **AI State** (`/api/ai/{gameId}/state`) | `position.whoHasBall` | `"QB"`, `"WR1"`, `"RB"`, `null` |
+| **AI State** (`/api/ai/{gameId}/state`) | `ball.carrier` | Same as above (also in the `ball` object) |
+| PlayTransactionModel (per-tick) | `WhoHasBall` | Position type enum (`QB`, `RB`, `WR1`, `WR2`, `C_O`) |
+
+> **⚠️ `whoHasBall` is returned in EVERY response** — formation submissions, move submissions, and state queries. You never need a separate call to find the ball carrier.
+
+### Ball Carrier Lifecycle
+
+| Game Phase | Typical `WhoHasBall` | Notes |
+|------------|---------------------|-------|
+| Pre-snap / Tick 0 | `C_O` | Center holds the ball at the start of each play |
+| Post-snap (ticks 1+) | `QB` | Ball snapped to quarterback |
+| After handoff | `RB` | If QB hands off to running back |
+| After completed pass | `WR1`, `WR2`, or `RB` | Receiver catches ball |
+| Ball in flight | `null` | No one has the ball — it is airborne |
+| After interception | *(defense player)* | Defender who intercepted now has ball |
+
+### Why `WhoHasBall` Matters
+
+**For Offense:**
+- **Blocking assignments pivot on the ball carrier.** O-Line should position between defenders and whoever has the ball — not just the QB.
+- After a completed pass, `WhoHasBall` changes from `QB` to the receiver. Blockers must immediately shift protection to the new carrier.
+- The ball carrier is **excluded from neutralization collisions** — collisions with the carrier go to the tackle stage instead.
+- Offensive teammates sharing the ball carrier's cell for 2+ consecutive ticks trigger a **stacking/riding penalty** (3-tick neutralization).
+
+**For Defense (MOST CRITICAL):**
+- **`WhoHasBall` tells you who to tackle.** Every defensive move decision should start with: *where is the ball carrier, and how do I get to them?*
+- When `WhoHasBall` is `QB` or `C_O`, the ball has not been thrown or handed off — **rush the QB and block passing lanes.**
+- When `WhoHasBall` changes to `WR1`, `WR2`, or `RB`, a pass was completed or handoff occurred — **all pursuit must redirect to the new carrier.**
+- When `WhoHasBall` is `null`, the ball is in flight — **break toward the pass target location** for an interception or to contest the catch.
+- Tackling the ball carrier ends the play. Neutralizing a non-carrier does not.
+
+### Reading `WhoHasBall` Each Tick
+
+`whoHasBall` is available directly in the `position` object of every moves/formation response:
+
+```python
+# After submitting moves, read whoHasBall from the response
+result = submit_moves(game_id, moves)
+carrier = result["position"]["whoHasBall"]  # e.g., "QB", "WR1", None
+
+# Or from the state endpoint
+state = get_game_state(game_id)
+carrier = state["position"]["whoHasBall"]   # same field
+# Also available at: state["ball"]["carrier"]
+
+if carrier is None:
+    # Ball is in flight — break toward pass target for interception
+    pass_target = state["ball"]  # check ball x,y for flight location
+elif carrier in ["WR1", "WR2", "RB"]:
+    # Pass completed or handoff — pursue the new ball carrier
+    carrier_pos = find_player_position(state, carrier)
+elif carrier in ["QB", "C_O"]:
+    # Ball still with QB/Center — rush QB, block passing lanes
+    qb_pos = find_player_position(state, "QB")
+```
+
+---
+
 ## Ball and Pass Information
 
 ### PlayTransactionModel
@@ -141,7 +209,7 @@ This is enforced by the server. If you try to submit when `isMyTurn` is `false`,
 | `PlayCount` | Play of transaction |
 | `TickCount` | Tick of transaction |
 | `BallLocation` | Current ball position (Vector2) |
-| `WhoHasBall` | Position type holding ball |
+| `WhoHasBall` | Position type holding ball (see **Ball Carrier** section above) |
 | `PassTargetLocation` | Where QB threw the ball |
 | `PassTargetTick` | Tick when pass was thrown |
 | `PassTargetingResult` | Result of pass attempt |
@@ -329,7 +397,9 @@ Use `?include=` to customize `/state` response:
 
 1. **⚠️ Check isMyTurn FIRST** - never submit when `false`; offense goes first
 2. **Always check turnType** before deciding action type
-3. **Track ball possession** via PlayTransactions
+3. **⚠️ Check `position.whoHasBall` EVERY TICK** — this is the single most important tactical field:
+   - **Offense:** Shift blocking to protect whoever has the ball; ball carrier should advance toward hotspots
+   - **Defense:** Pursue the ball carrier for a tackle; when `carrier` is `null`, ball is airborne — contest the catch
 4. **Monitor neutralized players** - they cannot move; submit `[0,0]` for them
 5. **Use getLocationAtTickCount()** for precise positioning
 6. **Check PassTargetingResult** to understand pass outcomes

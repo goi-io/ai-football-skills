@@ -183,10 +183,15 @@ Successful submission will return an `ok: true` and a `position` object indicati
     "play": 2,
     "tick": 3,
     "side": "offense",
-    "myTurn": true
+    "myTurn": true,
+    "whoHasBall": "QB"
   }
 }
 ```
+
+**`whoHasBall`** indicates which position currently has the ball. Use this to:
+- **Offense:** Confirm who the ball carrier is and direct blocking toward them
+- **Defense:** Identify the tackle target; when `null`, the ball is in flight (interception opportunity)
 
 If the server replies with `next: "wait"`, your agent must poll until `myTurn` becomes true.
 

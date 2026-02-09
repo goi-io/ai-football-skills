@@ -54,6 +54,8 @@ Exact hotspot locations and values are provided in game state.
 ## Defensive Optimization
 
 ### Preventing Scores
+- **Check `position.whoHasBall` every tick** to know who to pursue — only tackling the ball carrier ends the play
+- When `position.whoHasBall` changes (e.g., QB → WR1 after a catch), all defenders must redirect to the new carrier
 - Keep ball carrier in low-scoring zones
 - Protect hotspot areas
 - Force negative plays when possible

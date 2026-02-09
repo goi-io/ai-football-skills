@@ -16,6 +16,28 @@ Assign and execute defensive coverage to prevent offensive completions and creat
 - **S** - Safety (deep coverage, help)
 - **LB** - Linebacker (short coverage, RB responsibility)
 
+## Reading `WhoHasBall` for Coverage Decisions
+
+**`position.whoHasBall` from every moves/formation response (and the state endpoint) is the most important field for defensive coverage.** It tells you the current phase of the offensive play and dictates coverage priorities.
+
+> **Tip:** You get `whoHasBall` in the response every time you submit moves — no extra API call needed.
+
+| `position.whoHasBall` | What It Means | Coverage Response |
+|---------------------|---------------|-------------------|
+| `QB` or `C_O` | Ball hasn't been thrown or handed off | Stay in coverage, shadow receivers, anticipate pass |
+| `null` | Ball is in the air | **Break toward the pass target** to contest or intercept |
+| `WR1`, `WR2`, or `RB` | Pass completed or handoff occurred | **Abandon receiver coverage, pursue the ball carrier** |
+
+### Key Transitions
+- **QB → null:** Pass was just thrown. Check `ball.x` / `ball.y` for the flight path. Move toward the target cell.
+- **null → WR1/WR2/RB:** Pass completed. The receiver is now the ball carrier — all defenders should collapse toward them.
+- **QB → RB:** Handoff. LB and secondary should shift from coverage to run pursuit.
+
+### Coverage vs. Pursuit Trade-Off
+Once `position.whoHasBall` changes from `QB` to a skill player, coverage assignments **no longer matter**. Every defender's priority becomes pursuing the ball carrier for a tackle. Staying in a coverage shell after a completion wastes ticks.
+
+---
+
 ## Coverage Types
 
 ### Man-to-Man Coverage

@@ -93,6 +93,19 @@ These penalties **do not** deduct points; neutralization is the only consequence
 
 ## Offensive Blocking
 
+### ⚠️ Blocking Must Follow `WhoHasBall`
+
+**Check `position.whoHasBall` in every moves response to determine WHO blockers should protect.** Blocking the wrong player is as bad as not blocking at all.
+
+| `position.whoHasBall` | Blocking Priority |
+|----------------|-------------------|
+| `QB` or `C_O` | **Pass protection** — position O-line between defenders and the QB |
+| `RB` | **Run blocking** — shift protection to the running back's path |
+| `WR1` / `WR2` | **Screen/YAC blocking** — move blockers toward the receiver's predicted path |
+| `null` | Ball in flight — blockers should transition to where the target receiver will be |
+
+The most critical transition: **QB → WR1/WR2/RB** (pass completion or handoff). After this, continuing to block for the QB is wasted effort.
+
 ### Blocker Assignments
 | Blocker | Typical Target |
 |---------|----------------|
@@ -111,6 +124,17 @@ These penalties **do not** deduct points; neutralization is the only consequence
 - Maintain blocks as long as needed
 
 ## Defensive Tackling
+
+### ⚠️ Find the Ball Carrier First
+
+**Always check `position.whoHasBall` in every moves response before deciding tackle targets.** Only tackling the ball carrier ends the play. Neutralizing non-carriers removes them temporarily but doesn't stop the offense.
+
+| `position.whoHasBall` | Tackle Priority |
+|----------------|----------------|
+| `QB` | Rush and tackle the QB (sack) |
+| `RB` | Pursue the running back |
+| `WR1` / `WR2` | Pursue the receiver after a catch |
+| `null` | Ball airborne — contest the pass instead of tackling |
 
 ### Tackle Priorities
 1. **Ball carrier** - Highest priority

@@ -15,6 +15,25 @@ Move defensive players to disrupt passing plays through pressure and lane blocki
 - **TL, TR, C_D** - Defensive linemen (primary rushers, movement restricted)
 - **LB** - Linebacker (secondary rusher, full mobility)
 
+## Reading `WhoHasBall` for Rush Decisions
+
+**Check `position.whoHasBall` in every moves response to decide rush strategy.** The ball carrier determines whether rushing still makes sense or whether the play has evolved past the pass rush phase.
+
+> **Tip:** `whoHasBall` is returned in the response every time you submit moves — you always know the carrier without a separate state call.
+
+| `position.whoHasBall` | Rush Response |
+|---------------------|---------------|
+| `QB` or `C_O` | **Continue rushing.** QB still holds the ball — pressure is effective |
+| `null` | Ball is thrown. **Stop rushing, redirect** toward the pass target for a block or contest |
+| `WR1`, `WR2`, or `RB` | Pass completed or handoff. **Abandon rush, pursue ball carrier** |
+
+### Why This Matters
+- Continuing to rush the QB after a pass or handoff wastes ticks. All defenders should redirect to the ball carrier.
+- When `carrier` is `null` (ball in flight), D-linemen in the ordinal lane between QB and target can **block the pass**.
+- Tracking `position.whoHasBall` on each tick allows you to detect handoffs (QB → RB) immediately and switch from pass rush to run containment.
+
+---
+
 ## Rush Objectives
 
 ### Primary Goals

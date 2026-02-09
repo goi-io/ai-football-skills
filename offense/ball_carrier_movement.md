@@ -11,6 +11,28 @@
 ## Purpose
 Guide ball carriers to maximize yards gained while avoiding defenders.
 
+## Identifying the Ball Carrier via `WhoHasBall`
+
+**Before planning ball carrier movement, confirm WHO actually has the ball.** The `position.whoHasBall` field — returned in every moves/formation response and the state endpoint — tells you which position is the current ball carrier.
+
+> **Tip:** After each move submission, the response includes `whoHasBall` in `position` — use it immediately for your next tick's planning.
+
+| `position.whoHasBall` | Meaning |
+|---------------------|----------|
+| `C_O` | Pre-snap; center holds the ball |
+| `QB` | Post-snap; QB has the ball (can throw or hand off) |
+| `RB` | Handoff or reception; RB is running |
+| `WR1` / `WR2` | Pass completed to a receiver |
+| `null` | Ball is in flight (no carrier) |
+
+### Why This Matters for Offense
+- **Only the actual ball carrier should be moved toward scoring zones.** Moving the wrong player toward a hotspot is wasted motion.
+- **Blockers must protect the current carrier, not necessarily the QB.** After a completed pass, `WhoHasBall` changes from `QB` to `WR1`/`WR2`/`RB`. Blocking assignments should immediately shift to shield the new carrier from defenders.
+- The ball carrier is **excluded from neutralization collisions** — instead, defender contact triggers a tackle. This means the carrier can take riskier paths through congestion since the worst outcome is a tackle (ending the play), not a multi-tick disable.
+- Teammates sharing the ball carrier's cell for 2+ consecutive ticks get penalized (stacking/riding), so blockers should stay **adjacent** to the carrier, never on the same cell.
+
+---
+
 ## Applicable Players
 - **RB** - Primary ball carrier
 - **WR1/WR2** - After catching passes

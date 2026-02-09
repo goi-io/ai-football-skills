@@ -140,16 +140,18 @@ When a player is neutralized (blocked by an opponent):
 ### Offensive Movement Goals
 | Situation | Strategy |
 |-----------|----------|
-| Ball carrier | Advance toward scoring zones |
-| Route running | Create separation, reach targets |
-| Blocking | Position to protect teammates |
+| Ball carrier (`WhoHasBall` = you) | Advance toward scoring zones / hotspots |
+| Route running (pre-pass) | Create separation, reach targets |
+| Blocking (when `WhoHasBall` = QB) | Position between defenders and QB (pass protection) |
+| Blocking (when `WhoHasBall` = WR/RB) | Shift protection to the new ball carrier's path |
 
 ### Defensive Movement Goals
 | Situation | Strategy |
 |-----------|----------|
-| Coverage | Shadow assigned receiver |
-| Pursuit | Angle toward ball carrier |
-| Pass rush | Move toward QB or blocking lanes |
+| Coverage (when `WhoHasBall` = QB) | Shadow receivers, anticipate throw |
+| Coverage (when `WhoHasBall` = null) | Break toward pass target for contest/interception |
+| Pursuit (when `WhoHasBall` = WR/RB) | Angle toward ball carrier for tackle |
+| Pass rush (when `WhoHasBall` = QB) | Move toward QB or blocking lanes |
 
 ## Path Planning Concepts
 

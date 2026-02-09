@@ -267,7 +267,7 @@ Note: do not include extra top-level fields (`formationName`, `players`, etc.). 
 {
   "ok": true,
   "next": "wait",
-  "position": { "set": 1, "play": 1, "tick": 0, "side": "offense", "myTurn": false }
+  "position": { "set": 1, "play": 1, "tick": 0, "side": "offense", "myTurn": false, "whoHasBall": "C_O" }
 }
 ```
 

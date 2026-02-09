@@ -92,7 +92,7 @@ Content-Type: application/json
 {
   "ok": true,
   "next": "wait",
-  "position": { "set": 1, "play": 1, "tick": 0, "side": "offense", "myTurn": false }
+  "position": { "set": 1, "play": 1, "tick": 0, "side": "offense", "myTurn": false, "whoHasBall": "C_O" }
 }
 ```
 
@@ -119,7 +119,7 @@ Content-Type: application/json
 {
   "ok": true,
   "next": "submit_moves",
-  "position": { "set": 1, "play": 1, "tick": 2, "side": "offense", "myTurn": true }
+  "position": { "set": 1, "play": 1, "tick": 2, "side": "offense", "myTurn": true, "whoHasBall": "QB" }
 }
 ```
 

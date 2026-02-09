@@ -16,6 +16,27 @@ Position defenders to intercept passes and create turnovers for defensive scorin
 - **CB1, CB2** - Cornerbacks (coverage interceptions)
 - **LB** - Linebacker (underneath route interceptions)
 
+## Reading `WhoHasBall` for Interception Opportunities
+
+**`position.whoHasBall` in the moves response is the trigger signal for interception attempts.** Interceptions are only possible when the ball is in the air or at the target cell.
+
+> **Tip:** When `whoHasBall` transitions to `null` in a response, the ball was just thrown — act immediately on your next tick.
+
+| `position.whoHasBall` | Interception Relevance |
+|---------------------|------------------------|
+| `QB` or `C_O` | Ball hasn't been thrown yet — prepare by reading routes and anticipating targets |
+| `null` | **Ball is in flight — BREAK NOW.** Move toward `ball.x`/`ball.y` (pass target) to contest |
+| `WR1`, `WR2`, `RB` | Pass completed — interception window is closed; shift to pursuit/tackle |
+
+### Critical: The `null` Window
+When `position.whoHasBall` transitions from `QB` to `null`, you have a **limited tick window** to reach the target cell before the receiver. This is the interception opportunity:
+1. Read `ball.x`, `ball.y` — this is where the ball is heading.
+2. Compare your defender's position to the target cell.
+3. If reachable, move directly toward the target. Highest `avg` attributes win the contest.
+4. If the ball becomes LiveBall (no one catches it at the target), it remains contestable for **2 ticks** — a second chance.
+
+---
+
 ## Interception Value
 Interceptions are highly valuable:
 - Defense gains possession

@@ -175,7 +175,8 @@ Submit player positions for the current play. Use this during the formation phas
     "play": 2,
     "tick": 0,
     "side": "offense",
-    "myTurn": false
+    "myTurn": false,
+    "whoHasBall": "C_O"
   }
 }
 ```
@@ -269,7 +270,8 @@ Submit movement vectors for the current tick. Use this during the tick phase.
     "play": 2,
     "tick": 4,
     "side": "offense",
-    "myTurn": true
+    "myTurn": true,
+    "whoHasBall": "QB"
   }
 }
 ```
@@ -291,7 +293,8 @@ Get current game state including positions, score, and what action to take next.
     "play": 1,
     "tick": 1,
     "side": "defense",
-    "myTurn": true
+    "myTurn": true,
+    "whoHasBall": "QB"
   },
   "score": {
     "home": 0,
@@ -398,6 +401,10 @@ def play_game():
                 print(f"Moves rejected: {resp.get('error')}")
                 # Fix and retry — do NOT stop playing
                 continue
+
+            # Read whoHasBall from the response to track ball carrier
+            who_has_ball = resp.get("position", {}).get("whoHasBall")
+            print(f"Ball carrier: {who_has_ball}")  # e.g., "QB", "WR1", None (in flight)
 
         # Brief pause to avoid hammering the server
         time.sleep(0.5)
@@ -617,6 +624,7 @@ Attribute values influence game outcomes. Higher values generally improve perfor
 - **CurrentIndex:** Where we are in the game timeline
 - **PlayTransactions:** History of all moves this play
 - **PlayerPacketModels:** Current positions and states for all 14 players
+- **`position.whoHasBall`:** Which position currently holds the ball — returned in every API response (see dedicated section in game_state_packet.md) — **the single most important tactical field for both sides**
 - **PassTargetingResult:** Outcome of any pass attempt
 - **EndOfPlayReasonType:** Why the play ended (if ended)
 
@@ -693,10 +701,13 @@ Attribute values influence game outcomes. Higher values generally improve perfor
 - Target hotspot locations for bonus scoring
 - Avoid defenders to prevent neutralization
 
+**⚠️ Always check `position.whoHasBall` in the response to confirm which player actually has the ball before planning movement. Blockers must protect the current carrier, not just the QB.**
+
 **Strategic Considerations:**
 - Balance aggression vs. safety
 - Use evasion techniques against pursuing defenders
 - Calculate paths to high-value cells
+- After a catch/handoff, blocking assignments must shift to the new ball carrier
 
 ---
 
@@ -710,6 +721,8 @@ Attribute values influence game outcomes. Higher values generally improve perfor
 **⚠️ Movement Constraint:** These positions cannot move above Y = 2.
 - Track current Y position; if at Y = 2, only move laterally or backward
 - Violation will be rejected by the game engine
+
+**⚠️ Check `position.whoHasBall` each tick.** If it is no longer `QB` (ball was thrown or handed off), **stop rushing and redirect** — either toward the pass target (if ball in flight) or toward the new ball carrier.
 
 **Tactics:**
 - **Lane Blocking:** Position in QB's throwing path before release
@@ -730,6 +743,8 @@ Attribute values influence game outcomes. Higher values generally improve perfor
 - **Zone:** Defenders cover areas of the field
 
 **Applicable Positions:** CB1, CB2, S, LB
+
+**⚠️ Coverage is only relevant while `position.whoHasBall` = `QB`.** Once a pass is completed or handoff occurs (value changes to WR/RB), abandon coverage assignments and pursue the ball carrier.
 
 **Strategic Considerations:**
 - Match defender speed against receiver speed
@@ -770,7 +785,8 @@ Attribute values influence game outcomes. Higher values generally improve perfor
 - Neutralized players cannot move until recovered
 
 **Strategic Considerations:**
-- Target high-value opponents (ball carrier, QB)
+- **Defense:** Target the ball carrier (`position.whoHasBall`) — only tackling the carrier ends the play. Neutralizing non-carriers is useful but secondary.
+- **Offense:** Direct blocking toward whoever is threatening the current ball carrier. When `position.whoHasBall` changes (e.g., QB → WR1 after a catch), shift blocking to the new carrier.
 - Consider attribute matchups before engaging
 - Blockers sacrifice mobility to protect teammates
 
