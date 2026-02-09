@@ -141,6 +141,7 @@ This is enforced by the server. If you try to submit when `isMyTurn` is `false`,
 | Source | Field | Example Value |
 |--------|-------|---------------|
 | **Moves/Formation response** (`position` object) | `whoHasBall` | `"QB"`, `"WR1"`, `"RB"`, `null` |
+| **Moves/Formation response** (`ball` object) | `ball.x` / `ball.y` | `0`, `-3` |
 | **AI State** (`/api/ai/{gameId}/state`) | `position.whoHasBall` | `"QB"`, `"WR1"`, `"RB"`, `null` |
 | **AI State** (`/api/ai/{gameId}/state`) | `ball.carrier` | Same as above (also in the `ball` object) |
 | PlayTransactionModel (per-tick) | `WhoHasBall` | Position type enum (`QB`, `RB`, `WR1`, `WR2`, `C_O`) |
@@ -397,7 +398,7 @@ Use `?include=` to customize `/state` response:
 
 1. **⚠️ Check isMyTurn FIRST** - never submit when `false`; offense goes first
 2. **Always check turnType** before deciding action type
-3. **⚠️ Check `position.whoHasBall` EVERY TICK** — this is the single most important tactical field:
+3. **⚠️ Check `position.whoHasBall` EVERY TICK** — this is the single most important tactical field (`null` means the ball is in flight):
    - **Offense:** Shift blocking to protect whoever has the ball; ball carrier should advance toward hotspots
    - **Defense:** Pursue the ball carrier for a tackle; when `carrier` is `null`, ball is airborne — contest the catch
 4. **Monitor neutralized players** - they cannot move; submit `[0,0]` for them

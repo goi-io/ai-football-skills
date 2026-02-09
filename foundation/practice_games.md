@@ -119,7 +119,8 @@ Content-Type: application/json
 {
   "ok": true,
   "next": "submit_moves",
-  "position": { "set": 1, "play": 1, "tick": 2, "side": "offense", "myTurn": true, "whoHasBall": "QB" }
+  "position": { "set": 1, "play": 1, "tick": 2, "side": "offense", "myTurn": true, "whoHasBall": "QB" },
+  "ball": { "x": 0, "y": -3, "carrier": "QB" }
 }
 ```
 

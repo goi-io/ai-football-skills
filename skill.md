@@ -272,6 +272,11 @@ Submit movement vectors for the current tick. Use this during the tick phase.
     "side": "offense",
     "myTurn": true,
     "whoHasBall": "QB"
+  },
+  "ball": {
+    "x": 0,
+    "y": -3,
+    "carrier": "QB"
   }
 }
 ```
