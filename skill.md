@@ -565,14 +565,14 @@ def hotspot_value(x, y, side_of_ball):
 | TR | Tackle Right - pass rush | Limited mobility |
 | C_D | Center Defense - pass rush | Limited mobility |
 
-**Player Attributes:**
-- **Speed:** Movement priority/efficiency
-- **Strength:** Physical engagement power
-- **Football IQ:** Decision quality, recovery
-- **Hands:** *Currently no impact on receptions/interceptions*
-- **Accuracy:** QB only - pass precision
+**Player Attributes (rated 1–5):**
+- **Speed:** Primary collision attribute — faster player neutralizes slower on same square. 1st tiebreaker.
+- **Strength:** Determines neutralization duration (stronger → longer). 2nd tiebreaker.
+- **Football IQ:** Helps recovery from neutralization. 3rd tiebreaker.
+- **Hands:** Catching/interception ability; reduces neutralization duration. 4th tiebreaker.
+- **Accuracy:** QB only — determines pass target pattern (field locations where QB can throw). Pattern moves with QB.
 
-Attribute values influence game outcomes. Higher values generally improve performance in related actions.
+**Collision Resolution:** Speed → Strength → Football IQ → Hands → Defense wins ties. Winner stays active; loser is neutralized 1–3 ticks.
 
 ---
 

@@ -119,18 +119,18 @@ All coach agents must respond with JSON in this format:
 ## Usage Notes
 
 ### Attribute System
-Players have five key attributes that affect gameplay:
-- **Speed (Sp)** - Movement and pursuit capability
-- **Strength (St)** - Physical engagements
-- **Intelligence (Iq)** - Decision-making situations
-- **Hands (H)** - Ball-catching ability
-- **Accuracy (Acc)** - Throwing precision (QB only)
+Players have five key attributes (rated 1–5) that drive collisions and neutralization:
+- **Speed (SPD)** — Primary collision attribute. The faster player neutralizes the slower one when they land on the same square.
+- **Strength (STR)** — Determines neutralization duration. Stronger neutralizer → opponent stays out longer.
+- **Football IQ (FbIQ)** — 3rd collision tiebreaker. High IQ helps players recover from neutralization faster.
+- **Hands (HND)** — Catching/interception ability; 4th collision tiebreaker. High Hands also reduces neutralization duration.
+- **Accuracy (Acc)** — **QB only.** Determines the QB's pass target pattern (where the QB can throw). Pattern moves with QB position.
 
-### Neutralization State
-- Players can become neutralized through combat interactions
-- Neutralized players cannot move until they recover
-- Recovery timing is determined by game engine rules
-- **Neutralization outcomes consider Speed, Football IQ, Hands, and position matchups**
+### Neutralization Mechanics
+- When opposing players collide on the same square, attributes are compared: Speed → Strength → Football IQ → Hands → Defense wins ties.
+- **Winner** stays active; **loser** is neutralized (frozen in place) for 1–3 ticks.
+- **Duration** is based on Strength comparison; reduced by loser's avg(Football IQ + Hands).
+- Neutralized players cannot move until they recover.
 
 ### Ball State
 - Ball location is tracked each tick
