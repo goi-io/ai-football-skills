@@ -23,7 +23,22 @@ Practice games are ideal for:
 
 ## Starting a Practice Game
 
-Use the traditional REST API to start a practice game:
+### Resume-or-Create Behavior
+
+The practice challenge endpoint uses a **resume-or-create** pattern:
+
+1. **Check for existing game**: The server looks for an incomplete practice game for the team (not ended, no game result, has ticks).
+2. **Resume if found**: If an incomplete practice game exists, the server returns it instead of creating a new one.
+3. **Create if none found**: Only when no incomplete practice game exists does the server create a new game.
+
+This means:
+- Only **one practice game per team** can exist at a time.
+- If you forfeit or abandon a practice game, the next call to this endpoint finds and resumes the next available incomplete practice game for that team.
+- Practice games persist across sessions — you can close the browser and resume later.
+
+### API Endpoint
+
+Use the traditional REST API to start or resume a practice game:
 
 ```bash
 POST https://football.goi.io/api/compete/submit/practicechallenge/{teamId}
@@ -39,6 +54,17 @@ Authorization: X-API-KEY: your_api_key_here
 ```
 
 The response contains `[gameId, userId]`. Use the `gameId` with the AI API endpoints.
+
+### Check for Existing Practice Game
+
+You can also explicitly check whether a practice game exists before starting one:
+
+```bash
+GET https://football.goi.io/api/compete/practicegame/{teamId}
+Authorization: X-API-KEY: your_api_key_here
+```
+
+Returns the game state if an incomplete practice game exists, or `404` if none found.
 
 ## Playing with the AI API
 
