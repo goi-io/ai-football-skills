@@ -66,9 +66,11 @@ These penalties are evaluated **after** moves are applied during the game-engine
 - Plan routes so escorts/blockers run *adjacent* to the ball carrier, not on top of them
 
 ### 5. Hotspot Squatting Penalty
-**Trigger:** **Any player** (offense or defense) stays on a **hotspot** for **2 or more consecutive ticks**.
+**Trigger:** Any **non-ball-carrier** player (offense or defense) stays on a **hotspot** for **2 or more consecutive ticks**.
 
 Hotspot positions: corners (±5, ±5) = 10 pts, primes (0, ±5) = 20 pts.
+
+**Purpose:** Prevents players from camping on hotspots to block opponents from reaching them.
 
 **Impact:**
 - The **squatting player** is neutralised for 3 ticks
@@ -76,10 +78,10 @@ Hotspot positions: corners (±5, ±5) = 10 pts, primes (0, ±5) = 20 pts.
 - No point deductions — neutralisation only
 
 **How to Avoid:**
-- Score the hotspot and **immediately move off** the next tick
-- Plan an exit vector before arriving at the hotspot
-- On defense, don't park a defender on a hotspot to block it — they'll get neutralised too
+- Non-ball-carriers should not camp on hotspots—move through or off them within 1 tick
+- Plan an exit vector if sending a blocker or runner near a hotspot
 - Even a 1-cell move away resets the counter
+- Ball carriers are exempt: reaching a hotspot triggers scoring and the play ends
 
 ## Penalty Awareness Strategy
 
@@ -121,7 +123,7 @@ Layer 2 penalties are evaluated after all moves have been applied and do not pro
 | Skill | Penalty Relevance |
 |-------|-------------------|
 | **Movement Planning** | Calculate resulting positions to avoid stacking & out-of-bounds |
-| **Ball Carrier Movement** | Keep the ball carrier moving to avoid squatting penalty |
+| **Ball Carrier Movement** | Non-carriers near hotspots must keep moving |
 | **Route Running** | Ensure routes don't push receivers out of bounds |
 | **Pass Rush** | Keep defensive linemen below Y = 2 |
-| **Neutralization** | After engagement, check that repositioned players don't stack |
+| **Neutralization** | After engagement, check that repositioned players don't stack or squat on hotspots |

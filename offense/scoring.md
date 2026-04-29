@@ -36,9 +36,11 @@ The 11×11 field (coordinates −5 to +5 on both axes) has **6 hotspots** arrang
 | Lower corners (±5, −5) | **−10** (safety!) | **+10** |
 | Lower prime (0, −5) | **−20** (safety!) | **+20** |
 
-**Key insight for offense:** Upper hotspots are always positive. Lower hotspots are **negative** — reaching them is worse than being tackled at midfield. Never route the ball carrier toward Y = −5.
+**Key insight for offense:** Upper hotspots are always positive bonuses that replace your base score. Lower hotspots are **negative** — reaching them is worse than being tackled at midfield. Never route the ball carrier toward Y = −5.
 
 **Key insight for defense:** All hotspots are positive after an interception. The absolute value is used, so lower hotspots are just as valuable as upper ones.
+
+**You do not need to reach a hotspot to score.** Every row of Y-advancement (offense) or distance from LOS (defense) earns base points. Hotspots are high-value bonuses when reached cleanly.
 
 ## Non-Hotspot Scoring (Fallback)
 

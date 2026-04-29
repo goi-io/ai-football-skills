@@ -86,8 +86,10 @@ Some neutralizations are penalties, not collisions:
 
 - **Stacking/Riding:** A teammate sharing the **ball carrier's cell** for 2+ consecutive ticks
 	(3+ ticks for QB at/below LOS overlapping RB/WR1/WR2) gets neutralized for **3 ticks**.
-- **Hotspot Squatting:** Any player staying on a hotspot for 2+ consecutive ticks
+- **Hotspot Squatting:** Any **non-ball-carrier** player staying on a hotspot for 2+ consecutive ticks
 	gets neutralized for **3 ticks**.
+
+(Ball carriers trigger scoring immediately upon reaching a hotspot—the play ends, so squatting never applies to them.)
 
 These penalties **do not** deduct points; neutralization is the only consequence.
 

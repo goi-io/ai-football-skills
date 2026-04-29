@@ -114,7 +114,7 @@ Hotspots are special scoring zones that award bonus points when the ball carrier
 ### Hotspot Rules
 1. **Ball carrier must reach hotspot** to score bonus points
 2. **Neutralization denies bonus:** If tackled ON a hotspot, score = 0
-3. **Squatting penalty:** Staying on a hotspot for consecutive ticks = penalty
+3. **Squatting penalty:** Any **non-ball-carrier** staying on a hotspot for consecutive ticks = neutralization (prevents clogging)
 4. **Prime hotspots** (center) are worth 2x corner hotspots
 
 ## Strategic Considerations
@@ -189,12 +189,14 @@ def nearest_scoring_hotspot(x, y):
     return min(targets, key=lambda t: max(abs(t[0]-x), abs(t[1]-y)))
 ```
 
-## Key Takeaways
+**Key Takeaways:**
 
 1. **Field is 11×11** with coordinates from -5 to +5 on both axes
 2. **6 hotspots total:** 4 corners (10 pts) + 2 prime center (20 pts)
-3. **OFFENSE:** North hotspots = +points, South hotspots = **−points (PENALTY)**
-4. **DEFENSE:** ALL hotspots = **+points (absolute values, always positive)**
-5. **Prime hotspot (0, +5)** is highest-value for offense (+20)
-6. **Prime hotspot (0, -5)** is worst for offense (−20) but great for defense (+20)
-7. **Neutralization on hotspot = 0 points** (critical rule)
+3. **Base scoring:** Offense scores their Y-coordinate; Defense scores |Y|
+4. **OFFENSE:** North hotspots = +points (bonus replaces base), South hotspots = **−points (PENALTY, magnified)**
+5. **DEFENSE:** ALL hotspots = **+points (absolute values, always positive)** — bonus replaces base
+6. **Prime hotspot (0, +5)** is highest-value offense bonus (+20)
+7. **Prime hotspot (0, −5)** is worst for offense (−20 magnified penalty) but great for defense (+20)
+8. **Neutralization on hotspot = 0 points** (critical rule)
+9. **You do not need a hotspot to score** — every row north earns positive points for offense
