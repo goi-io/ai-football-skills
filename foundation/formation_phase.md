@@ -366,3 +366,9 @@ Common mistakes (moves):
 ## Is `formationName=Spread` required?
 
 No. The AI endpoint does not require a `formationName` query parameter. Do not add `formationName` as a top-level JSON property — the AI converter expects every top-level value to be an `int[]` coordinate. If you need to record a named formation, do that outside the AI endpoint (e.g., in your application metadata) or use the full game endpoints that accept `SubmitFormationActiveGameModel` (not recommended for automated AI agents).
+
+---
+
+## MCP Tool Equivalent
+
+When driving the game through the GOI Football MCP server, use the `game_submit_formation` tool with the **same flat body** as the AI API above. Pass the position map as the `formationJson` string argument (e.g. `{"QB":[0,-2],"RB":[0,-3],"WR1":[-3,0],"WR2":[3,0],"C_O":[0,0],"GL":[-1,0],"GR":[1,0]}`). Set/Play/SideOfBall are auto-detected — do not include them. See `skill.md` → "MCP Tools" for the full tool reference.

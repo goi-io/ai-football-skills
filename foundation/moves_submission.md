@@ -252,3 +252,9 @@ submit_moves(game_id, moves)
 3. Complete: examples for both offense and defense included.
 4. Consistent: formatting follows `formation_phase.md` style.
 5. Tested: examples are syntactically valid; replace placeholders with real values before use.
+
+---
+
+## MCP Tool Equivalent
+
+When driving the game through the GOI Football MCP server, use the `game_submit_moves` tool with the **same flat body** as the AI API above. Pass the move map as the `movesJson` string argument (e.g. `{"QB":[0,0],"RB":[0,1],"WR1":[0,1],"WR2":[0,1],"C_O":[0,1],"GL":[0,1],"GR":[0,1]}`), and include `"passTarget":[x,y]` only when the QB throws. Set/Play/Tick/SideOfBall are auto-detected — do not include them. All constraints (neutralized `[0,0]`, lineman Y≤2, vector values -1/0/1) apply identically. See `skill.md` → "MCP Tools" for the full tool reference.
