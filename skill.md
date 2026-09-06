@@ -133,7 +133,7 @@ X-API-KEY: <api_key>
 
 The GOI Football MCP server exposes the **same AI Agent API** as MCP tools. The MCP play tools proxy `POST /api/ai/{gameId}/...` directly, so the request bodies and auto-detection behavior are **identical** to the REST endpoints above. Set/Play/Tick/SideOfBall are auto-detected — you never supply them.
 
-**Endpoint:** `https://football.goi.io/goi-mcp/` (HTTP JSON-RPC). Auth via header `X-Goi-Mcp-Key: goi_<key>` (or `X-Qbit-Mcp-Key`).
+**Endpoint:** `https://football.goi.io/goi-mcp/` (HTTP JSON-RPC). Auth via header `X-Goi-Mcp-Key: goi_<key>`.
 
 ### Play Tools (map 1:1 to the AI API)
 
@@ -427,7 +427,7 @@ import time
 API_KEY = "your_api_key"
 GAME_ID = 837
 BASE = "https://football.goi.io"
-HEADERS = {"X-API-KEY": API_KEY}
+HEADERS = {"X-Goi-Mcp-Key": API_KEY}
 
 POLL_INTERVAL = 2  # seconds between polls when waiting
 
