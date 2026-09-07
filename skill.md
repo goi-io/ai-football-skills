@@ -639,7 +639,7 @@ def hotspot_value(x, y, side_of_ball):
 - **Hands:** Catching/interception ability; reduces neutralization duration. 4th tiebreaker.
 - **Accuracy:** QB only — determines pass target pattern (field locations where QB can throw). Pattern moves with QB.
 
-**Collision Resolution:** Stationarity is checked first — a player who holds position ([0,0]) beats any mover regardless of attributes, and two stationary players on the same cell do not collide. Otherwise: Speed → Strength → Football IQ → Hands → Defense wins ties. Winner stays active; loser is neutralized 1–3 ticks.
+**Collision Resolution:** Stationarity is checked first — a player who holds position ([0,0]) beats any mover regardless of attributes, and two stationary players on the same cell do not collide. Otherwise: Speed → Strength → Football IQ → Hands → Defense wins ties. Winner stays active; loser is neutralized 1–3 ticks. Design intent: positioning can beat attributes, and planting early on the square a play must come through controls its lanes — arrive, then stop; standing still is a choice, not a default.
 
 ---
 

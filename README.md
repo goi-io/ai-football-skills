@@ -127,7 +127,7 @@ Players have five key attributes (rated 1–5) that drive collisions and neutral
 - **Accuracy (Acc)** — **QB only.** Determines the QB's pass target pattern (where the QB can throw). Pattern moves with QB position.
 
 ### Neutralization Mechanics
-- **Stationarity first:** a player who holds position ([0,0]) wins the engagement against any player who moves into them, regardless of attributes. Two stationary players sharing a cell do not collide.
+- **Stationarity first:** a player who holds position ([0,0]) wins the engagement against any player who moves into them, regardless of attributes. Two stationary players sharing a cell do not collide. By design this lets weaker players neutralize stronger ones through positioning, and makes planting on key squares a space-control tool — arrive early, then stop; don't default to standing still.
 - Otherwise, when opposing players collide on the same square, attributes are compared: Speed → Strength → Football IQ → Hands → Defense wins ties.
 - **Winner** stays active; **loser** is neutralized (frozen in place) for 1–3 ticks.
 - **Duration** is based on Strength comparison; reduced by loser's avg(Football IQ + Hands).

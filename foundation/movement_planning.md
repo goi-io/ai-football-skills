@@ -24,6 +24,14 @@ Players can move in cardinal and diagonal directions:
 - **Diagonal:** NE, NW, SE, SW
 - **Stay:** Remain in current position
 
+### Stopping With Purpose ([0,0] as a Tool)
+
+Moving into an occupied cell loses to the occupant regardless of attributes, so *being the occupant* is valuable — and it is earned by moving. Design intent: this rule gives players with weaker attributes a real path to neutralize stronger ones, and makes stopping itself part of play-building.
+
+- **Arrive, then stop.** Spend early ticks reaching the square the play must come through — a carrier lane on defense, a blocking point or route landmark on offense — then submit [0,0] and hold it. Whoever plants first owns the square.
+- **Stopping controls space.** A planted player is an obstacle opponents must go around or lose to; that shapes lanes on both sides of the ball.
+- **Do not default to standing still.** A stationary player controls only the cell they occupy and concedes every lane they are not in. Stop because the square is worth holding, not because it feels safe.
+
 ### Movement Constraints
 
 #### Grid Boundaries

@@ -57,6 +57,8 @@ If a collision occurs (excluding the ball carrier; see below), the winner is dec
 5. **Hands**
 6. **Tie goes to defense** (defense is rewarded for reading the play)
 
+**Design intent of the stationarity rule:** it exists to (1) give players with weaker attribute collections a real path to neutralize stronger opponents through positioning, and (2) make stopping itself part of play-building — the square a player plants on, and the lanes through it, become controlled space. It rewards arriving early at the square the play must come through; it does not reward standing still by default, since a stationary player controls only the cell they occupy.
+
 The loser is neutralized for a duration computed by the neutralization formula.
 
 ### Ball Carrier Exception

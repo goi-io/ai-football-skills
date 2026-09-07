@@ -50,6 +50,8 @@ Evaluate play options considering probability of success and failure consequence
 - Plenty of time
 - Protecting lead
 
+**⚠️ "Low risk" does not mean standing still.** A [0,0] hold only pays when the square being held is one the play must come through — planting early on a carrier lane (defense) or a blocking point (offense) is space control, not caution. Defaulting to [0,0] elsewhere concedes every lane you are not in and surrenders tempo. If no square is worth holding, the low-risk play is usually *moving deliberately to a better square*, not freezing.
+
 ### Moderate Risk
 - Medium-depth passes
 - Balanced coverage

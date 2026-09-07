@@ -70,7 +70,11 @@ When opposing players collide, the winner is determined by cascading comparison.
 5. Defense     → Defensive player wins (reward for reading the play)
 ```
 
-**Strategic use:** holding your ground is the strongest defensive action available. A defender standing still on a lane the ball carrier must cross will win the engagement even against faster opponents — "standing tall" beats "chasing." Use it to hold gaps, escort routes, and tackle-on-arrival. Conversely, when you must move into an occupied cell, expect to lose unless your Speed (then Strength, IQ, Hands) exceeds the occupant's.
+**Why the stationarity rule exists (design intent):**
+1. **Balance for weaker players** — it gives players with a weaker attribute collection at least a real chance to neutralize stronger opponents: positioning, not raw attributes, decides the engagement.
+2. **A strategic tool** — stopping is part of play-building: whoever reaches a key square first and plants controls that square and the lanes through it.
+
+**Strategic use (offense and defense):** standing tall on a lane beats chasing it — a defender planted where the ball carrier must cross, or a blocker planted where a defender must pass, wins the engagement regardless of attributes. But this is not an invitation to play it safe by standing still: a stationary player controls only the cell they occupy and concedes every lane they are not in. The strong pattern is **arrive, then stop** — spend early ticks moving to the square the play must come through, then plant there. Getting to the right spot and stopping is an advantage; stopping by default is not. Conversely, when you must move into an occupied cell, expect to lose unless your Speed (then Strength, IQ, Hands) exceeds the occupant's.
 
 **Winner:** Maintains position/movement. **Loser:** Neutralized at current location.
 
