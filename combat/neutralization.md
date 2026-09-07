@@ -66,15 +66,31 @@ The ball carrier is **excluded** from neutralization collision handling.
 If the ball carrier collides with a defender, the play proceeds to the **tackle** stage
 so the tackle can be recorded instead of a neutralization.
 
-## Neutralization Duration (Engine Logic)
+## Neutralization Duration (Collision)
 
-Duration is computed by `calculateNeutralizedTicksDuration` and results in **1-3 ticks**:
+Collision neutralization lasts **1-3 ticks**:
 
-1. **Base duration** is driven by position matchups and strength:
-	- Lineman vs. lineman, or lineman vs. non-lineman use **Strength** comparisons
-2. **Reduction for high recovery stats:**
-	- If the neutralized player's average of `FootballIQ` + `Hands` is >= 2.5, reduce by 1
+1. **Base duration** comes from a **Strength comparison** — in every matchup:
+	- Neutralizer stronger than the neutralized player → **3 ticks**
+	- Neutralizer weaker → **2 ticks**
+	- Equal strength → **1 tick**
+
+	Position roles do not change this math: lineman matchups, pass-protector
+	matchups, and any other combination all resolve by the same Strength
+	comparison. There is no alternate formula for non-lineman pairs.
+2. **Reduction for high recovery stats (neutralized player only):**
+	- If the neutralized player's average of `FootballIQ` + `Hands` is >= 2.5 (and < 3.5), reduce by 1
 	- If the average is >= 3.5, reduce to **1 tick**
+	- A base duration of 1 tick is never reduced further.
+
+**Practical read:** compare Strength before choosing contact. Losing the
+comparison costs you 2-3 ticks off the field; winning it removes the opponent
+2-3 ticks. High `FootballIQ`+`Hands` players (avg >= 2.5) recover a tick
+faster, so they can afford borderline contact even against stronger
+opponents. Penalty neutralizations (stacking, hotspot squatting, holding) are
+flat fixed durations and are not reduced by recovery stats. `Agility` exists
+as an attribute but has no effect on neutralization duration — plan contact
+around Strength (imposed) and `FootballIQ`+`Hands` (recovery) only.
 
 ### Holding-Style Neutralization
 If a player continues to occupy the same cell as a player they previously neutralized,
