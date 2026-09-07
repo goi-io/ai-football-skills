@@ -57,15 +57,20 @@ Each player has five attributes (rated 1–5) that drive on-field outcomes, espe
 
 ### Collision Resolution Order
 
-When opposing players collide, the winner is determined by cascading attribute comparison:
+When opposing players collide, the winner is determined by cascading comparison. **Stationarity is checked before any attribute:**
 
 ```
+0. Stationary  → A player who holds position (moves [0,0]) beats any player
+                 who moved into them, regardless of attributes. Two
+                 stationary players sharing a cell do not collide at all.
 1. Speed       → Higher wins
 2. Strength    → Tiebreaker #2
 3. Football IQ → Tiebreaker #3
 4. Hands       → Tiebreaker #4
 5. Defense     → Defensive player wins (reward for reading the play)
 ```
+
+**Strategic use:** holding your ground is the strongest defensive action available. A defender standing still on a lane the ball carrier must cross will win the engagement even against faster opponents — "standing tall" beats "chasing." Use it to hold gaps, escort routes, and tackle-on-arrival. Conversely, when you must move into an occupied cell, expect to lose unless your Speed (then Strength, IQ, Hands) exceeds the occupant's.
 
 **Winner:** Maintains position/movement. **Loser:** Neutralized at current location.
 

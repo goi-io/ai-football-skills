@@ -25,7 +25,8 @@ The engine stores neutralization in **both** the player tick vector and the play
 
 ### Determining Outcomes
 The game engine determines neutralization outcomes based on:
-- **Speed:** First collision tiebreaker
+- **Stationarity:** Checked before all attributes — a player holding position ([0,0]) beats any player who moves into them, regardless of attribute values. Two stationary players sharing a cell do not collide.
+- **Speed:** First attribute tiebreaker
 - **Strength:** Second collision tiebreaker and primary duration driver
 - **Football IQ:** Third collision tiebreaker, also reduces duration when high
 - **Hands:** Fourth collision tiebreaker, also reduces duration when high

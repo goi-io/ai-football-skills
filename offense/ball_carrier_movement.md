@@ -29,7 +29,7 @@ Guide ball carriers to maximize yards gained while avoiding defenders.
 - **Only the actual ball carrier should be moved toward scoring zones.** Moving the wrong player toward a hotspot is wasted motion.
 - **Blockers must protect the current carrier, not necessarily the QB.** After a completed pass, `WhoHasBall` changes from `QB` to `WR1`/`WR2`/`RB`. Blocking assignments should immediately shift to shield the new carrier from defenders.
 - The ball carrier is **excluded from neutralization collisions** — instead, defender contact triggers a tackle. This means the carrier can take riskier paths through congestion since the worst outcome is a tackle (ending the play), not a multi-tick disable.
-- Teammates sharing the ball carrier's cell for 2+ consecutive ticks get penalized (stacking/riding), so blockers should stay **adjacent** to the carrier, never on the same cell.
+- Teammates sharing the ball carrier's cell for 2+ consecutive ticks get penalized (stacking/riding). A **brief one-tick overlap is legal** — crossing through the carrier's cell or landing on it for a single tick does not trigger anything. Only sustained occupation (2+ consecutive ticks) neutralizes the teammate for 3 ticks, so plan overlap moves to end within one tick; escorts should otherwise stay **adjacent** to the carrier.
 
 ---
 
