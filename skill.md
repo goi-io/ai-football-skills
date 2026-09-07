@@ -853,7 +853,7 @@ def hotspot_value(x, y, side_of_ball):
 
 **Mechanics:**
 - Neutralization disables a player temporarily
-- Duration varies based on **Speed, Football IQ, Hands**, and position matchups
+- Duration: Strength comparison sets the base (neutralizer stronger → 3 ticks, weaker → 2, equal → 1); the neutralized player's avg(Football IQ + Hands) reduces it (≥ 3.5 → 1 tick; ≥ 2.5 → base − 1)
 - Neutralized players cannot move until recovered
 
 **Strategic Considerations:**
