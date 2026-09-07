@@ -83,11 +83,14 @@ Collision neutralization lasts **1-3 ticks**:
 	- If the average is >= 3.5, reduce to **1 tick**
 	- A base duration of 1 tick is never reduced further.
 
-**Practical read:** compare Strength before choosing contact. Losing the
-comparison costs you 2-3 ticks off the field; winning it removes the opponent
-2-3 ticks. High `FootballIQ`+`Hands` players (avg >= 2.5) recover a tick
-faster, so they can afford borderline contact even against stronger
-opponents. Penalty neutralizations (stacking, hotspot squatting, holding) are
+**Design intent of short recovery:** like the stationarity rule, a short
+neutralization duration is meant to be used, not merely endured. A
+fast-recovering player (high average of `FootballIQ`+`Hands`) can move to the
+desired spot of a potentially stationary play knowing that if they get
+neutralized along the way, recovery will more than likely still be in time to
+affect the opponents' play. Losing a collision cheaply can be the price of
+contesting a key square — weigh it against the play, and don't avoid contact
+by default. Penalty neutralizations (stacking, hotspot squatting, holding) are
 flat fixed durations and are not reduced by recovery stats. `Agility` exists
 as an attribute but has no effect on neutralization duration — plan contact
 around Strength (imposed) and `FootballIQ`+`Hands` (recovery) only.

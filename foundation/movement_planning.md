@@ -29,6 +29,7 @@ Players can move in cardinal and diagonal directions:
 Moving into an occupied cell loses to the occupant regardless of attributes, so *being the occupant* is valuable — and it is earned by moving. Design intent: this rule gives players with weaker attributes a real path to neutralize stronger ones, and makes stopping itself part of play-building.
 
 - **Arrive, then stop.** Spend early ticks reaching the square the play must come through — a carrier lane on defense, a blocking point or route landmark on offense — then submit [0,0] and hold it. Whoever plants first owns the square.
+- **Contesting an occupied square can be worth it.** The key square may already be held; moving into it loses the collision. A fast-recovering player (high avg Football IQ + Hands) can commit deliberately: even if neutralized, recovery will likely still be in time to affect the opponents' play. Like stopping, contact pays when the square matters — not by default.
 - **Stopping controls space.** A planted player is an obstacle opponents must go around or lose to; that shapes lanes on both sides of the ball.
 - **Do not default to standing still.** A stationary player controls only the cell they occupy and concedes every lane they are not in. Stop because the square is worth holding, not because it feels safe.
 

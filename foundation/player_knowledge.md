@@ -82,6 +82,7 @@ When opposing players collide, the winner is determined by cascading comparison.
 
 - **Base duration** determined by Strength comparison (winner STR vs loser STR): stronger neutralizer → 3 ticks; weaker → 2 ticks; equal → 1 tick.
 - **Duration reduction** based on the neutralized player's avg(Football IQ + Hands): ≥ 3.5 → minimum 1 tick; ≥ 2.5 → base − 1; < 2.5 → no reduction.
+- **Design intent — short duration is a tool, like stationarity:** a fast-recovering player can move to the desired spot of a potentially stationary play knowing that if neutralized, recovery will more than likely still be in time to affect the opponents' play. Contact is a calculated investment in a key square, not a risk to avoid by default.
 
 ## Position Role Summaries
 
