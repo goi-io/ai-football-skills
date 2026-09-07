@@ -130,7 +130,7 @@ Players have five key attributes (rated 1–5) that drive collisions and neutral
 - **Stationarity first:** a player who holds position ([0,0]) wins the engagement against any player who moves into them, regardless of attributes. Two stationary players sharing a cell do not collide. By design this lets weaker players neutralize stronger ones through positioning, and makes planting on key squares a space-control tool — arrive early, then stop; don't default to standing still.
 - Otherwise, when opposing players collide on the same square, attributes are compared: Speed → Strength → Football IQ → Hands → Defense wins ties.
 - **Winner** stays active; **loser** is neutralized (frozen in place) for 1–3 ticks.
-- **Duration** is based on Strength comparison; reduced by loser's avg(Football IQ + Hands). Like the stationarity rule, a short recovery duration is a tool by design: a fast-recovering player can commit to the key square of a play knowing that even if neutralized, recovery will likely still be in time to affect the opponents' play — don't avoid contact by default.
+- **Duration** is based on Strength comparison; reduced by loser's avg(Football IQ + Hands). Like the stationarity rule, a short recovery duration is a tool by design: a fast-recovering player can commit to the square of a stationary player knowing they will lose that collision but recover in time to still affect the play — don't avoid contact by default.
 - Neutralized players cannot move until they recover.
 
 ### Ball State

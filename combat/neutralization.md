@@ -85,11 +85,12 @@ Collision neutralization lasts **1-3 ticks**:
 
 **Design intent of short recovery:** like the stationarity rule, a short
 neutralization duration is meant to be used, not merely endured. A
-fast-recovering player (high average of `FootballIQ`+`Hands`) can move to the
-desired spot of a potentially stationary play knowing that if they get
-neutralized along the way, recovery will more than likely still be in time to
-affect the opponents' play. Losing a collision cheaply can be the price of
-contesting a key square — weigh it against the play, and don't avoid contact
+fast-recovering player (high average of `FootballIQ`+`Hands`) can commit to
+the square of a stationary player knowing the outcome in advance: the
+stationary player wins the collision, so they will be neutralized — but
+recovery will more than likely still be in time to affect the opponents'
+play. Losing that collision cheaply can be the price of contesting a key
+square — weigh it against the play, and don't avoid contact
 by default. Penalty neutralizations (stacking, hotspot squatting, holding) are
 flat fixed durations and are not reduced by recovery stats. `Agility` exists
 as an attribute but has no effect on neutralization duration — plan contact
