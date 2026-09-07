@@ -50,6 +50,12 @@ Each defender assigned a specific receiver:
 **Strengths:** Clear assignments, accountability
 **Weaknesses:** Beaten by speed mismatches
 
+> **Neutralization trap:** a receiver who plays through you may be designing
+> the collision. They are pinned in place while neutralized and recover right
+> where they stopped — with catch priority over you at the target cell. Do not
+> abandon a just-neutralized receiver's cell on the assumption they are out of
+> the play; re-contest before their recovery completes.
+
 ### Zone Coverage
 Defenders cover areas of the field:
 - Deep zones protect against long passes

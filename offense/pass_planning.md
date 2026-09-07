@@ -156,6 +156,18 @@ The `passTarget` coordinate should be the cell where one of these receivers will
 - LiveBall is contestable for **2 ticks** before expiring to **LiveBallExpired** (0 points).
 - During live ball, **any defense player** plus WR1/WR2/RB can win by highest `avg` attributes.
 
+### Timing Passes to Recovery
+Neutralized players cannot contest (see the eligibility filters above). This
+cuts both ways:
+- Never time a critical throw to land while the target receiver is still
+  neutralized.
+- Deliberately, the reverse is a design tool: route a receiver into contact
+  with their covering defender, then time the throw for the receiver's recovery
+  tick. The receiver respawns in place and catches over the defender
+  (target-cell priority favors receivers). Because the offense chooses the
+  target, the recovery clock is part of the play design — the defense reacting
+  to a "dead" receiver is the distraction the throw exploits.
+
 ### QB Pass-Target Pattern
 - QB has a defined pattern of cells where passes can be thrown.
 - The pattern is derived from the QB's player attributes.

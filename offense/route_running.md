@@ -67,6 +67,19 @@ Receivers can work together:
 - One receiver clears an area
 - Another receiver attacks vacated space
 
+### Contact as a Design Tool
+An engagement with the covering defender does not have to be avoided — it can be
+designed:
+- Playing through the defender neutralizes both players for a known duration;
+  the receiver is pinned in place and recovers right there.
+- The covering defender is absorbed for that duration; when they move on, the
+  receiver holds a protected spot at the point of contact.
+- Design the route to the desired spot, absorb the defender, then have the pass
+  timed to arrive as the receiver recovers — a recovered receiver on the target
+  cell catches over a defender.
+- The offense controls the ball's destination, so the recovery clock is
+  something the play can be built around, not a risk to dodge.
+
 ## Strategic Considerations
 
 ### Reading Defenders

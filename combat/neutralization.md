@@ -96,6 +96,26 @@ flat fixed durations and are not reduced by recovery stats. `Agility` exists
 as an attribute but has no effect on neutralization duration — plan contact
 around Strength (imposed) and `FootballIQ`+`Hands` (recovery) only.
 
+**Offensive leverage — neutralization on purpose:** the same math can be spent
+deliberately by the offense. Because the offense controls where the ball is
+going, a receiver can treat contact with their covering defender as a *designed*
+event with a known recovery clock:
+
+1. The receiver plays through the covering defender and is neutralized — the
+   defender is absorbed out of the play for the collision's duration.
+2. The receiver is pinned in place while neutralized (they do not respawn
+   elsewhere) and recovers after that duration.
+3. When the covering defender moves on, the throw is timed to arrive as (or
+   after) the receiver recovers — a receiver standing on the target cell catches
+   over a defender, since target-cell priority favors receivers.
+
+The "dead" receiver is a distraction the defense pays for: the rest of the
+offense gains position while the defense commits to the neutralized spot. Time
+the pass for the recovery tick — a still-neutralized player cannot contest a
+pass. On defense, expect this design: do not rotate off a neutralized
+receiver's cell too early, because the receiver respawns in place and can catch
+the moment they recover.
+
 ### Holding-Style Neutralization
 If a player continues to occupy the same cell as a player they previously neutralized,
 the engine applies a **holding-style penalty neutralization** of **1 tick**
