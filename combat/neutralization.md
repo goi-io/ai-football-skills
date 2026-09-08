@@ -91,7 +91,7 @@ stationary player wins the collision, so they will be neutralized — but
 recovery will more than likely still be in time to affect the opponents'
 play. Losing that collision cheaply can be the price of contesting a key
 square — weigh it against the play, and don't avoid contact
-by default. Penalty neutralizations (stacking, hotspot squatting, holding) are
+by default. Penalty neutralizations (stacking, hotspot squatting) are
 flat fixed durations and are not reduced by recovery stats. `Agility` exists
 as an attribute but has no effect on neutralization duration — plan contact
 around Strength (imposed) and `FootballIQ`+`Hands` (recovery) only.
@@ -116,12 +116,12 @@ pass. On defense, expect this design: do not rotate off a neutralized
 receiver's cell too early, because the receiver respawns in place and can catch
 the moment they recover.
 
-### Holding-Style Neutralization
-If a player continues to occupy the same cell as a player they previously neutralized,
-the engine applies a **holding-style penalty neutralization** of **1 tick**
-(via `HOLDING_PENALITY_TICK_COUNT = 1`).
-
-This discourages camping on a neutralized opponent's space.
+### Camping on a Neutralized Player (No Penalty)
+There is no "holding" penalty. If a player lingers on the cell of a player they just
+neutralized, the engine does **not** penalize the camper — instead it **releases** the
+neutralized player early so they can re-engage. Camping the spot does not buy extended
+control; it hands the released player their square back. If you win a collision and
+neutralize an opponent, move off the contested space rather than planting on it.
 
 ## Penalty-Based Neutralization (Penalty Stage)
 
