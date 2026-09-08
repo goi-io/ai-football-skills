@@ -137,7 +137,7 @@ The `passTarget` coordinate should be the cell where one of these receivers will
 - If the throw is along a direct ordinal line (N, NE, E, SE, S, SW, W, NW),
   defenders between the QB and target can resolve the pass before it reaches the target.
 - **D-Line** in the lane blocks (nearest + strongest to QB).
-- If no D-Line block, **pass defenders** in the lane intercept (CB1, CB2, S, LB).
+- If no D-Line block, **pass defenders** in the lane intercept (CB1, CB2, S).
 
 **Target-cell priority (if no ordinal block):**
 1. **Receivers** (WR1, WR2, RB) catch

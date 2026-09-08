@@ -14,7 +14,6 @@ Position defenders to intercept passes and create turnovers for defensive scorin
 ## Applicable Positions
 - **S** - Safety (primary ball hawk, highest priority)
 - **CB1, CB2** - Cornerbacks (coverage interceptions)
-- **LB** - Linebacker (underneath route interceptions)
 
 ## Reading `WhoHasBall` for Interception Opportunities
 
@@ -73,7 +72,7 @@ Engine notes for live ball:
 If the QB throws along a direct ordinal line (N, NE, E, SE, S, SW, W, NW):
 - **D-Line in the lane** blocks the pass (nearest + strongest to the QB)
 - If no D-Line block, **pass defenders** in the lane intercept instead
-	(CB1, CB2, S, and LB are considered pass defenders here)
+	(CB1, CB2, and S are considered pass defenders here)
 
 ### Target-Cell Priority (No Ordinal Block)
 When the ball reaches its target cell, the engine checks players **on that cell** in this order:

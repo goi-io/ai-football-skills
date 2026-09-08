@@ -837,7 +837,7 @@ def hotspot_value(x, y, side_of_ball):
   - **Direct pass targets** (receiver on target)
   - **QB directional throwing lanes** (lane blocking)
 
-**Applicable Positions:** S, CB1, CB2 (primary); LB (secondary)
+**Applicable Positions:** S, CB1, CB2
 
 **Strategic Considerations:**
 - Break on the ball when thrown
